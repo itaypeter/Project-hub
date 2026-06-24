@@ -1,0 +1,27 @@
+{
+  "lastUpdated": "2024-01-01T00:00:00.000Z",
+  "tasks": [
+    {
+      "id": 1,
+      "title": "דוגמה: הגדרת מסד נתונים",
+      "status": "done",
+      "createdAt": "2024-01-01T10:00:00.000Z",
+      "completedAt": "2024-01-02T14:00:00.000Z",
+      "source": "claude-code"
+    },
+    {
+      "id": 2,
+      "title": "דוגמה: בנות API endpoint לאימות משתמשים",
+      "status": "todo",
+      "createdAt": "2024-01-02T09:00:00.000Z",
+      "source": "claude-code"
+    },
+    {
+      "id": 3,
+      "title": "דוגמה: רעיון — הוסף dark mode לממשק",
+      "status": "idea",
+      "createdAt": "2024-01-02T11:00:00.000Z",
+      "source": "user"
+    }
+  ]
+}
