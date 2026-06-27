@@ -214,6 +214,56 @@
 .badge.input { background: rgba(59,130,246,.15); color: var(--blue); }
 .badge.output { background: rgba(16,185,129,.15); color: var(--emerald); }
 
+/* ── Storage toggle ── */
+.storage-toggle {
+  display: flex; gap: 4px; background: var(--bg);
+  border: 1px solid var(--border); border-radius: 8px; padding: 3px;
+}
+.storage-btn {
+  flex: 1; background: transparent; border: none; border-radius: 6px;
+  padding: 6px 8px; font-size: 11px; cursor: pointer; color: var(--muted);
+  font-weight: 500; transition: all .15s; white-space: nowrap;
+}
+.storage-btn.active { background: var(--accent); color: #fff; }
+.storage-btn:hover:not(.active) { color: var(--text); }
+
+/* ── Tab badge ── */
+.tab-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--accent-hi); color: #0D1117; border-radius: 10px;
+  font-size: 10px; font-weight: 700; padding: 1px 6px; margin-left: 6px;
+  min-width: 18px; line-height: 1.4;
+}
+.tab.active .tab-badge { background: rgba(255,255,255,.25); color: #fff; }
+
+/* ── Question cards ── */
+.question-card {
+  background: var(--surface); border: 1px solid var(--accent);
+  border-left: 4px solid var(--accent-hi); border-radius: 10px;
+  padding: 16px; margin-bottom: 12px;
+}
+.question-label {
+  font-size: 10px; text-transform: uppercase; letter-spacing: .08em;
+  color: var(--accent-hi); font-weight: 700; margin-bottom: 8px;
+}
+.question-title {
+  font-size: 14px; font-weight: 600; line-height: 1.5; margin-bottom: 12px;
+}
+.question-options {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px;
+}
+.option-btn {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 18px; font-size: 13px; cursor: pointer; color: var(--text);
+  font-weight: 500; transition: all .15s;
+}
+.option-btn:hover { border-color: var(--accent-hi); color: var(--accent-hi); background: rgba(124,58,237,.08); }
+.option-btn:disabled { opacity: .4; cursor: not-allowed; }
+.question-free { display: flex; gap: 8px; margin-top: 12px; }
+.question-meta {
+  font-size: 10px; color: var(--muted); font-family: var(--mono); margin-top: 10px;
+}
+
 /* ── Output section ── */
 .output-card {
   background: var(--surface); border: 1px solid var(--border); border-radius: 10px;

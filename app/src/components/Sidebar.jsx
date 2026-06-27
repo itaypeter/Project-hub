@@ -1,24 +1,16 @@
 import { PROJ_COLORS } from "../api/github.js";
 
 export default function Sidebar({
-  token,
-  tokenInput,
-  setTokenInput,
-  saveToken,
-  setToken,
-  repos,
-  repoInput,
-  setRepoInput,
-  addRepo,
-  removeRepo,
-  activeRepo,
-  setActiveRepo,
-  pendingCount,
-  sidebarOpen,
-  setSidebarOpen,
-  anthropicKey,
-  setAnthropicKey,
+  token, tokenInput, setTokenInput, saveToken, setToken,
+  repos, repoInput, setRepoInput, addRepo, removeRepo,
+  activeRepo, setActiveRepo, pendingCount, sidebarOpen, setSidebarOpen,
+  anthropicKey, setAnthropicKey,
+  storageType, setStorageType,
+  webdavUrl, setWebdavUrl,
+  webdavUser, setWebdavUser,
+  webdavPass, setWebdavPass,
 }) {
+  const isWebDAV = storageType === "webdav";
   return (
     <>
       <div
@@ -36,41 +28,86 @@ export default function Sidebar({
           </button>
         </div>
 
-        {/* GitHub Token */}
+        {/* Storage backend toggle */}
         <div className="sidebar-section">
-          <label>GitHub Token</label>
-          {token ? (
-            <div className="connected-badge">
-              <span>● Connected</span>
-              <button
-                onClick={() => {
-                  setToken("");
-                  localStorage.removeItem("gh_token");
-                }}
-              >
-                change
-              </button>
-            </div>
-          ) : (
-            <>
-              <input
-                className="s-input"
-                type="password"
-                placeholder="ghp_..."
-                value={tokenInput}
-                onChange={(e) => setTokenInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && saveToken()}
-              />
-              <button
-                className="s-btn"
-                onClick={saveToken}
-                style={{ width: "100%", marginTop: 6 }}
-              >
-                Save Token
-              </button>
-            </>
-          )}
+          <label>Storage</label>
+          <div className="storage-toggle">
+            <button
+              className={`storage-btn ${!isWebDAV ? "active" : ""}`}
+              onClick={() => setStorageType("github")}
+            >
+              GitHub
+            </button>
+            <button
+              className={`storage-btn ${isWebDAV ? "active" : ""}`}
+              onClick={() => setStorageType("webdav")}
+            >
+              NAS / WebDAV
+            </button>
+          </div>
         </div>
+
+        {/* GitHub Token */}
+        {!isWebDAV && (
+          <div className="sidebar-section">
+            <label>GitHub Token</label>
+            {token ? (
+              <div className="connected-badge">
+                <span>● Connected</span>
+                <button onClick={() => { setToken(""); localStorage.removeItem("gh_token"); }}>
+                  change
+                </button>
+              </div>
+            ) : (
+              <>
+                <input
+                  className="s-input"
+                  type="password"
+                  placeholder="ghp_..."
+                  value={tokenInput}
+                  onChange={(e) => setTokenInput(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && saveToken()}
+                />
+                <button className="s-btn" onClick={saveToken} style={{ width: "100%", marginTop: 6 }}>
+                  Save Token
+                </button>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* WebDAV config */}
+        {isWebDAV && (
+          <div className="sidebar-section">
+            <label>NAS WebDAV URL</label>
+            <input
+              className="s-input"
+              placeholder="http://192.168.1.x:5005/"
+              value={webdavUrl}
+              onChange={(e) => setWebdavUrl(e.target.value)}
+              style={{ marginBottom: 6 }}
+            />
+            <label style={{ marginTop: 8 }}>Username</label>
+            <input
+              className="s-input"
+              placeholder="admin"
+              value={webdavUser}
+              onChange={(e) => setWebdavUser(e.target.value)}
+              style={{ marginBottom: 6 }}
+            />
+            <label style={{ marginTop: 8 }}>Password</label>
+            <input
+              className="s-input"
+              type="password"
+              placeholder="••••••••"
+              value={webdavPass}
+              onChange={(e) => setWebdavPass(e.target.value)}
+            />
+            <div style={{ fontSize: 10, color: "var(--muted)", marginTop: 6, lineHeight: 1.4 }}>
+              Each project folder on your NAS should contain project-log.json
+            </div>
+          </div>
+        )}
 
         {/* Anthropic API Key */}
         <div className="sidebar-section">
@@ -78,12 +115,7 @@ export default function Sidebar({
           {anthropicKey ? (
             <div className="connected-badge">
               <span style={{ color: "var(--accent-hi)" }}>● AI ready</span>
-              <button
-                onClick={() => {
-                  setAnthropicKey("");
-                  localStorage.removeItem("anthropic_key");
-                }}
-              >
+              <button onClick={() => { setAnthropicKey(""); localStorage.removeItem("anthropic_key"); }}>
                 change
               </button>
             </div>
@@ -94,38 +126,23 @@ export default function Sidebar({
               placeholder="sk-ant-..."
               value={localStorage.getItem("anthropic_key") || ""}
               onChange={(e) => {
-                const val = e.target.value;
-                localStorage.setItem("anthropic_key", val);
-                setAnthropicKey(val);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  const val = e.target.value;
-                  localStorage.setItem("anthropic_key", val);
-                  setAnthropicKey(val);
-                }
+                localStorage.setItem("anthropic_key", e.target.value);
+                setAnthropicKey(e.target.value);
               }}
             />
           )}
-          <div
-            style={{
-              fontSize: 10,
-              color: "var(--muted)",
-              marginTop: 6,
-              lineHeight: 1.4,
-            }}
-          >
+          <div style={{ fontSize: 10, color: "var(--muted)", marginTop: 6, lineHeight: 1.4 }}>
             Enables AI file explanations in Code Explorer
           </div>
         </div>
 
-        {/* Repos */}
+        {/* Repos / Folders */}
         <div className="sidebar-section">
-          <label>Add Repo</label>
+          <label>{isWebDAV ? "Add Folder" : "Add Repo"}</label>
           <div className="input-row">
             <input
               className="s-input"
-              placeholder="owner/repo"
+              placeholder={isWebDAV ? "project-name" : "owner/repo"}
               value={repoInput}
               onChange={(e) => setRepoInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && addRepo()}

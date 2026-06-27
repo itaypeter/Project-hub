@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { SkeletonCard } from "./Skeleton.jsx";
 
 export function TaskCard({ task, showCheck = false, onToggle }) {
@@ -187,6 +188,95 @@ export function TasksTab({
           <p>
             Add inputs from the Input tab, or let Claude Code create tasks
             in project-log.json.
+          </p>
+        </div>
+      )}
+    </>
+  );
+}
+
+function QuestionCard({ task, onAnswer }) {
+  const [custom, setCustom] = useState("");
+  const [answering, setAnswering] = useState(false);
+
+  const handleAnswer = async (answer) => {
+    if (!answer.trim()) return;
+    setAnswering(true);
+    try {
+      await onAnswer(task.id, answer.trim());
+    } finally {
+      setAnswering(false);
+    }
+  };
+
+  return (
+    <div className="question-card">
+      <div className="question-label">Claude needs your input</div>
+      <div className="question-title">{task.title}</div>
+      {task.note && <div className="output-note">{task.note}</div>}
+      {task.options?.length > 0 ? (
+        <div className="question-options">
+          {task.options.map((opt) => (
+            <button
+              key={opt}
+              className="option-btn"
+              onClick={() => handleAnswer(opt)}
+              disabled={answering}
+            >
+              {opt}
+            </button>
+          ))}
+        </div>
+      ) : (
+        <div className="question-free">
+          <input
+            className="s-input"
+            placeholder="Your answer..."
+            value={custom}
+            onChange={(e) => setCustom(e.target.value)}
+            onKeyDown={(e) =>
+              e.key === "Enter" && custom.trim() && handleAnswer(custom)
+            }
+          />
+          <button
+            className="s-btn"
+            onClick={() => handleAnswer(custom)}
+            disabled={answering || !custom.trim()}
+          >
+            {answering ? "..." : "Answer"}
+          </button>
+        </div>
+      )}
+      <div className="question-meta">
+        {task.createdAt && new Date(task.createdAt).toLocaleString()}
+      </div>
+    </div>
+  );
+}
+
+export function QuestionsTab({ questionTasks, log, loading, onAnswer }) {
+  if (!log && loading) return <LoadingState skeleton="tasks" />;
+
+  return (
+    <>
+      {questionTasks.length > 0 && (
+        <div className="section-group">
+          <div className="section-label">
+            Waiting for your answer{" "}
+            <span className="section-count">{questionTasks.length}</span>
+          </div>
+          {questionTasks.map((t) => (
+            <QuestionCard key={t.id} task={t} onAnswer={onAnswer} />
+          ))}
+        </div>
+      )}
+      {log && questionTasks.length === 0 && (
+        <div className="empty">
+          <div className="empty-icon">✅</div>
+          <h2>No questions</h2>
+          <p>
+            Claude is working autonomously. When it needs a decision from
+            you, it will appear here.
           </p>
         </div>
       )}

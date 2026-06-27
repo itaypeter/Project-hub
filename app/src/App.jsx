@@ -3,6 +3,7 @@ import "./App.css";
 import Sidebar from "./components/Sidebar.jsx";
 import {
   InputTab,
+  QuestionsTab,
   TasksTab,
   OutputTab,
 } from "./components/TaskPanel.jsx";
@@ -13,7 +14,7 @@ import { useToast } from "./hooks/useToast.js";
 import { useProjectLog } from "./hooks/useProjectLog.js";
 import { useRepoBrowser } from "./hooks/useRepoBrowser.js";
 
-const TABS = ["input", "output", "tasks", "code"];
+const TABS = ["input", "questions", "tasks", "output", "code"];
 
 export default function App() {
   // ── Shared state ──
@@ -36,13 +37,39 @@ export default function App() {
     () => localStorage.getItem("anthropic_key") || ""
   );
 
+  const [storageType, setStorageType] = useState(
+    () => localStorage.getItem("storage_type") || "github"
+  );
+  const [webdavUrl, setWebdavUrl] = useState(
+    () => localStorage.getItem("webdav_url") || ""
+  );
+  const [webdavUser, setWebdavUser] = useState(
+    () => localStorage.getItem("webdav_user") || ""
+  );
+  const [webdavPass, setWebdavPass] = useState(
+    () => localStorage.getItem("webdav_pass") || ""
+  );
+
+  const storage =
+    storageType === "webdav"
+      ? { type: "webdav", baseUrl: webdavUrl, credentials: { user: webdavUser, pass: webdavPass } }
+      : { type: "github" };
+
   const [loading, setLoading] = useState(false);
   const [statusMsg, setStatusMsg] = useState("Ready");
   const [statusOk, setStatusOk] = useState(true);
 
   // ── Hooks ──
   const { toast, showToast } = useToast();
-  const projectLog = useProjectLog({ token, activeRepo });
+  const projectLog = useProjectLog({
+    token,
+    activeRepo,
+    storage,
+    onNewQuestion: (count) => {
+      showToast(`Claude has ${count} question${count > 1 ? "s" : ""} for you`);
+      setTab("questions");
+    },
+  });
   const repoBrowser = useRepoBrowser({ token, activeRepo, anthropicKey });
 
   // ── Handlers ──
@@ -139,7 +166,7 @@ export default function App() {
       }
 
       const numKey = parseInt(e.key);
-      if (numKey >= 1 && numKey <= 4) {
+      if (numKey >= 1 && numKey <= 5) {
         const idx = numKey - 1;
         if (TABS[idx]) setTab(TABS[idx]);
       }
@@ -150,7 +177,9 @@ export default function App() {
 
   // ── Derived ──
   const pendingCount =
-    projectLog.todoTasks.length + projectLog.blockedTasks.length;
+    projectLog.todoTasks.length +
+    projectLog.blockedTasks.length +
+    projectLog.questionTasks.length;
   const displayTree =
     tab === "code" ? repoBrowser.buildDisplayTree() : [];
 
@@ -174,6 +203,14 @@ export default function App() {
         setSidebarOpen={setSidebarOpen}
         anthropicKey={anthropicKey}
         setAnthropicKey={setAnthropicKey}
+        storageType={storageType}
+        setStorageType={(t) => { setStorageType(t); localStorage.setItem("storage_type", t); }}
+        webdavUrl={webdavUrl}
+        setWebdavUrl={(v) => { setWebdavUrl(v); localStorage.setItem("webdav_url", v); }}
+        webdavUser={webdavUser}
+        setWebdavUser={(v) => { setWebdavUser(v); localStorage.setItem("webdav_user", v); }}
+        webdavPass={webdavPass}
+        setWebdavPass={(v) => { setWebdavPass(v); localStorage.setItem("webdav_pass", v); }}
       />
 
       <main className="main">
@@ -197,6 +234,9 @@ export default function App() {
                     onClick={() => setTab(t)}
                   >
                     {t.charAt(0).toUpperCase() + t.slice(1)}
+                    {t === "questions" && projectLog.questionTasks.length > 0 && (
+                      <span className="tab-badge">{projectLog.questionTasks.length}</span>
+                    )}
                   </button>
                 ))}
               </div>
@@ -237,6 +277,16 @@ export default function App() {
               log={projectLog.log}
               loading={loading}
               onToggle={projectLog.toggleTask}
+            />
+          )}
+
+          {/* Questions tab */}
+          {activeRepo && tab === "questions" && (
+            <QuestionsTab
+              questionTasks={projectLog.questionTasks}
+              log={projectLog.log}
+              loading={loading}
+              onAnswer={projectLog.answerQuestion}
             />
           )}
 
