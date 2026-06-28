@@ -13,6 +13,7 @@ import Toast from "./components/Toast.jsx";
 import { useToast } from "./hooks/useToast.js";
 import { useProjectLog } from "./hooks/useProjectLog.js";
 import { useRepoBrowser } from "./hooks/useRepoBrowser.js";
+import { getUser } from "./api/github.js";
 
 const TABS = ["input", "questions", "tasks", "output", "code"];
 
@@ -22,6 +23,9 @@ export default function App() {
     () => localStorage.getItem("gh_token") || ""
   );
   const [tokenInput, setTokenInput] = useState("");
+  const [ghUser, setGhUser] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("gh_user") || "null"); } catch { return null; }
+  });
   const [repos, setRepos] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem("gh_repos") || "[]");
@@ -87,11 +91,28 @@ export default function App() {
   }, [darkMode]);
 
   // ── Handlers ──
-  const saveToken = () => {
-    localStorage.setItem("gh_token", tokenInput);
-    setToken(tokenInput);
-    setTokenInput("");
-    showToast("Token saved");
+  const saveToken = async () => {
+    const t = tokenInput.trim();
+    if (!t) return;
+    try {
+      const user = await getUser(t);
+      const profile = { login: user.login, avatar_url: user.avatar_url, name: user.name };
+      localStorage.setItem("gh_token", t);
+      localStorage.setItem("gh_user", JSON.stringify(profile));
+      setToken(t);
+      setGhUser(profile);
+      setTokenInput("");
+      showToast(`Connected as @${user.login}`);
+    } catch {
+      showToast("Invalid token — authentication failed");
+    }
+  };
+
+  const disconnectToken = () => {
+    setToken("");
+    setGhUser(null);
+    localStorage.removeItem("gh_token");
+    localStorage.removeItem("gh_user");
   };
 
   const addRepo = () => {
@@ -204,10 +225,11 @@ export default function App() {
     <>
       <Sidebar
         token={token}
+        ghUser={ghUser}
         tokenInput={tokenInput}
         setTokenInput={setTokenInput}
         saveToken={saveToken}
-        setToken={setToken}
+        disconnectToken={disconnectToken}
         repos={repos}
         repoInput={repoInput}
         setRepoInput={setRepoInput}

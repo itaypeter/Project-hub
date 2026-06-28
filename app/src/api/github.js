@@ -36,6 +36,10 @@ export async function putLog(token, repo, log, sha) {
   });
 }
 
+export async function getUser(token) {
+  return ghFetch(token, "user");
+}
+
 export async function getTree(token, repo) {
   const repoData = await ghFetch(token, `repos/${repo}`);
   const branch = repoData.default_branch;

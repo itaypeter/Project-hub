@@ -1,7 +1,7 @@
 import { PROJ_COLORS } from "../api/github.js";
 
 export default function Sidebar({
-  token, tokenInput, setTokenInput, saveToken, setToken,
+  token, ghUser, tokenInput, setTokenInput, saveToken, disconnectToken,
   repos, repoInput, setRepoInput, addRepo, removeRepo,
   activeRepo, setActiveRepo, pendingCount, sidebarOpen, setSidebarOpen,
   anthropicKey, setAnthropicKey,
@@ -63,10 +63,11 @@ export default function Sidebar({
             <label>GitHub Token</label>
             {token ? (
               <div className="connected-badge">
-                <span>&#x25CF; Connected</span>
-                <button onClick={() => { setToken(""); localStorage.removeItem("gh_token"); }}>
-                  change
-                </button>
+                {ghUser?.avatar_url && (
+                  <img src={ghUser.avatar_url} className="gh-avatar" alt="" />
+                )}
+                <span>&#x25CF; {ghUser ? `@${ghUser.login}` : "Connected"}</span>
+                <button onClick={disconnectToken}>change</button>
               </div>
             ) : (
               <>
@@ -79,7 +80,7 @@ export default function Sidebar({
                   onKeyDown={(e) => e.key === "Enter" && saveToken()}
                 />
                 <button className="s-btn" onClick={saveToken} style={{ width: "100%", marginTop: 6 }}>
-                  Save Token
+                  Verify &amp; Save Token
                 </button>
               </>
             )}
