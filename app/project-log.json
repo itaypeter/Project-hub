@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-28T07:10:00.000Z",
+  "lastUpdated": "2026-06-28T08:00:00.000Z",
   "tasks": [
     {
       "id": 1,
@@ -12,8 +12,9 @@
     {
       "id": 2,
       "title": "דוגמה: בנות API endpoint לאימות משתמשים",
-      "status": "todo",
+      "status": "done",
       "createdAt": "2024-01-02T09:00:00.000Z",
+      "completedAt": "2026-06-28T08:00:00.000Z",
       "source": "claude-code"
     },
     {
@@ -33,6 +34,16 @@
       "source": "claude-code",
       "note": "שינוי קבצים: index.css, App.jsx, Sidebar.jsx, App.css.\n\nindex.css: הוספתי --code-text כ-CSS variable (כי הצבע היה hardcoded), והוספתי בלוק [data-theme=\"light\"] עם ערכים בהשראת GitHub Light: --bg:#FFF, --surface:#F6F8FA, --surface-2:#EAEEF2, --border:#D1D5DB, --text:#1F2937, --muted:#6B7280. צבעי ה-accent נשארו זהים בשני הנושאים.\n\nApp.jsx: הוספתי darkMode state שנקרא מ-localStorage (key: 'theme'), עם fallback ל-prefers-color-scheme. מגדיר data-theme על document.documentElement סינכרונית ב-state initializer (למניעת הבהוב), ועוד פעם ב-useEffect כשהמצב משתנה. הוספתי קיצור מקלדת 'd' לטוגל. מעביר darkMode ו-toggleDarkMode ל-Sidebar.\n\nSidebar.jsx: הוספתי כפתור ☀️/🌙 ב-sidebar-header, תמיד נראה (לא רק במובייל כמו כפתור הסגירה).\n\nApp.css: שיניתי color: #A9B1D6 ל-color: var(--code-text) בבלוק .code-block pre, והוספתי סגנון .theme-toggle.\n\nלא שיניתי: לוגיקת API, hooks, שאר הקומפוננטות. המשתמש יראה: כפתור שמש/ירח ב-sidebar בכל עת, קיצור 'd' לטוגל, העדפה נשמרת ב-localStorage.",
       "commitUrl": "https://github.com/itaypeter/Project-hub/commit/0ef481bd094f7095abcb2547abcb410cf6219e4a"
+    },
+    {
+      "id": 5,
+      "title": "אימות GitHub token והצגת פרופיל המשתמש המחובר",
+      "status": "done",
+      "createdAt": "2026-06-28T08:00:00.000Z",
+      "completedAt": "2026-06-28T08:00:00.000Z",
+      "source": "claude-code",
+      "note": "שינוי קבצים: api/github.js, App.jsx, components/Sidebar.jsx, App.css.\n\napi/github.js: הוספתי פונקציה getUser(token) שקוראת ל-GitHub /user API ומחזירה פרופיל המשתמש.\n\nApp.jsx: שיניתי saveToken() ל-async — עכשיו קוראת ל-getUser() לפני שמירת ה-token. אם הבקשה מצליחה: שומרת token + פרופיל (login, avatar_url, name) ב-localStorage תחת gh_user, ומציגה toast 'Connected as @username'. אם נכשלת: מציגה toast עם הודעת שגיאה ולא שומרת כלום. הוספתי disconnectToken() שמנקה גם gh_token וגם gh_user. הוספתי ghUser state שנטען מ-localStorage בהפעלה.\n\nSidebar.jsx: ה-'connected badge' מציג עכשיו avatar קטן (18px) + @username במקום הטקסט הגנרי 'Connected'. כפתור הכניסה שונה ל-'Verify & Save Token'. מקבל disconnectToken במקום setToken ישירות.\n\nApp.css: הוספתי .gh-avatar (18px, עגול, border).\n\nהחלטות: פירשתי 'API endpoint לאימות' בהקשר של React PWA ללא backend — המשמעות הטבעית היא אימות token מול GitHub API ב-client-side. לא שיניתי לוגיקת repo, hooks, WebDAV, קיצורי מקלדת.",
+      "commitUrl": "https://github.com/itaypeter/Project-hub/commit/135575d3461ff2bddf767bff03465f7a339fc9ad"
     }
   ]
 }
