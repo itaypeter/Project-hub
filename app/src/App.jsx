@@ -50,6 +50,14 @@ export default function App() {
     () => localStorage.getItem("webdav_pass") || ""
   );
 
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem("theme");
+    const prefersDark = !window.matchMedia("(prefers-color-scheme: light)").matches;
+    const isDark = saved ? saved === "dark" : prefersDark;
+    document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
+    return isDark;
+  });
+
   const storage =
     storageType === "webdav"
       ? { type: "webdav", baseUrl: webdavUrl, credentials: { user: webdavUser, pass: webdavPass } }
@@ -71,6 +79,12 @@ export default function App() {
     },
   });
   const repoBrowser = useRepoBrowser({ token, activeRepo, anthropicKey });
+
+  // ── Effects ──
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", darkMode ? "dark" : "light");
+    localStorage.setItem("theme", darkMode ? "dark" : "light");
+  }, [darkMode]);
 
   // ── Handlers ──
   const saveToken = () => {
@@ -135,7 +149,6 @@ export default function App() {
     }
   }, [token, activeRepo, repoBrowser]);
 
-  // ── Effects ──
   useEffect(() => {
     if (!activeRepo) return;
     setLoading(false);
@@ -163,6 +176,10 @@ export default function App() {
 
       if (e.key === "n" && activeRepo) {
         document.querySelector(".input-box textarea")?.focus();
+      }
+
+      if (e.key === "d" && !e.metaKey && !e.ctrlKey) {
+        setDarkMode((m) => !m);
       }
 
       const numKey = parseInt(e.key);
@@ -211,6 +228,8 @@ export default function App() {
         setWebdavUser={(v) => { setWebdavUser(v); localStorage.setItem("webdav_user", v); }}
         webdavPass={webdavPass}
         setWebdavPass={(v) => { setWebdavPass(v); localStorage.setItem("webdav_pass", v); }}
+        darkMode={darkMode}
+        toggleDarkMode={() => setDarkMode((m) => !m)}
       />
 
       <main className="main">
@@ -244,7 +263,7 @@ export default function App() {
                 className="refresh-btn"
                 onClick={tab === "code" ? loadTree : loadLog}
               >
-                <span className={loading ? "spinning" : ""}>⟳</span>
+                <span className={loading ? "spinning" : ""}>&#x27F3;</span>
               </button>
             </>
           ) : (

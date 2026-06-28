@@ -15,8 +15,20 @@
   --blue:      #3B82F6;
   --text:      #E6EDF3;
   --muted:     #8B949E;
+  --code-text: #A9B1D6;
   --mono:      'JetBrains Mono', monospace;
   --sans:      'Inter', sans-serif;
+}
+
+[data-theme="light"] {
+  --bg:        #FFFFFF;
+  --surface:   #F6F8FA;
+  --surface-2: #EAEEF2;
+  --border:    #D1D5DB;
+  --accent-hi: #6D28D9;
+  --text:      #1F2937;
+  --muted:     #6B7280;
+  --code-text: #24292E;
 }
 
 html, body, #root { height: 100%; }

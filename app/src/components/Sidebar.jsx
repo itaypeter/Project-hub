@@ -9,6 +9,7 @@ export default function Sidebar({
   webdavUrl, setWebdavUrl,
   webdavUser, setWebdavUser,
   webdavPass, setWebdavPass,
+  darkMode, toggleDarkMode,
 }) {
   const isWebDAV = storageType === "webdav";
   return (
@@ -20,12 +21,21 @@ export default function Sidebar({
       <aside className={`sidebar ${sidebarOpen ? "open" : ""}`}>
         <div className="sidebar-header">
           <div className="logo">Project<span>//</span>Hub</div>
-          <button
-            className="sidebar-close"
-            onClick={() => setSidebarOpen(false)}
-          >
-            ✕
-          </button>
+          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+            <button
+              className="theme-toggle"
+              onClick={toggleDarkMode}
+              title={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+            >
+              {darkMode ? "☀️" : "🌙"}
+            </button>
+            <button
+              className="sidebar-close"
+              onClick={() => setSidebarOpen(false)}
+            >
+              ✕
+            </button>
+          </div>
         </div>
 
         {/* Storage backend toggle */}
@@ -53,7 +63,7 @@ export default function Sidebar({
             <label>GitHub Token</label>
             {token ? (
               <div className="connected-badge">
-                <span>● Connected</span>
+                <span>&#x25CF; Connected</span>
                 <button onClick={() => { setToken(""); localStorage.removeItem("gh_token"); }}>
                   change
                 </button>
@@ -114,7 +124,7 @@ export default function Sidebar({
           <label>Claude API Key (optional)</label>
           {anthropicKey ? (
             <div className="connected-badge">
-              <span style={{ color: "var(--accent-hi)" }}>● AI ready</span>
+              <span style={{ color: "var(--accent-hi)" }}>&#x25CF; AI ready</span>
               <button onClick={() => { setAnthropicKey(""); localStorage.removeItem("anthropic_key"); }}>
                 change
               </button>
