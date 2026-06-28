@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-28T07:00:00.000Z",
+  "lastUpdated": "2026-06-28T07:10:00.000Z",
   "tasks": [
     {
       "id": 1,
@@ -19,9 +19,20 @@
     {
       "id": 3,
       "title": "דוגמה: רעיון — הוסף dark mode לממשק",
-      "status": "todo",
+      "status": "done",
       "createdAt": "2024-01-02T11:00:00.000Z",
+      "completedAt": "2026-06-28T07:10:00.000Z",
       "source": "user"
+    },
+    {
+      "id": 4,
+      "title": "הוספתי dark/light mode toggle לאפליקציה",
+      "status": "done",
+      "createdAt": "2026-06-28T07:10:00.000Z",
+      "completedAt": "2026-06-28T07:10:00.000Z",
+      "source": "claude-code",
+      "note": "שינוי קבצים: index.css, App.jsx, Sidebar.jsx, App.css.\n\nindex.css: הוספתי --code-text כ-CSS variable (כי הצבע היה hardcoded), והוספתי בלוק [data-theme=\"light\"] עם ערכים בהשראת GitHub Light: --bg:#FFF, --surface:#F6F8FA, --surface-2:#EAEEF2, --border:#D1D5DB, --text:#1F2937, --muted:#6B7280. צבעי ה-accent נשארו זהים בשני הנושאים.\n\nApp.jsx: הוספתי darkMode state שנקרא מ-localStorage (key: 'theme'), עם fallback ל-prefers-color-scheme. מגדיר data-theme על document.documentElement סינכרונית ב-state initializer (למניעת הבהוב), ועוד פעם ב-useEffect כשהמצב משתנה. הוספתי קיצור מקלדת 'd' לטוגל. מעביר darkMode ו-toggleDarkMode ל-Sidebar.\n\nSidebar.jsx: הוספתי כפתור ☀️/🌙 ב-sidebar-header, תמיד נראה (לא רק במובייל כמו כפתור הסגירה).\n\nApp.css: שיניתי color: #A9B1D6 ל-color: var(--code-text) בבלוק .code-block pre, והוספתי סגנון .theme-toggle.\n\nלא שיניתי: לוגיקת API, hooks, שאר הקומפוננטות. המשתמש יראה: כפתור שמש/ירח ב-sidebar בכל עת, קיצור 'd' לטוגל, העדפה נשמרת ב-localStorage.",
+      "commitUrl": "https://github.com/itaypeter/Project-hub/commit/0ef481bd094f7095abcb2547abcb410cf6219e4a"
     }
   ]
 }
