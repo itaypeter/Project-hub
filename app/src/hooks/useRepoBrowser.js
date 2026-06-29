@@ -7,6 +7,7 @@ import {
 
 export function useRepoBrowser({ token, activeRepo, anthropicKey }) {
   const [tree, setTree] = useState([]);
+  const [treeError, setTreeError] = useState(null);
   const [selectedPath, setSelectedPath] = useState(null);
   const [fileContent, setFileContent] = useState("");
   const [explanation, setExplanation] = useState("");
@@ -14,15 +15,21 @@ export function useRepoBrowser({ token, activeRepo, anthropicKey }) {
 
   const loadTree = useCallback(async () => {
     if (!token || !activeRepo) return;
-    const t = await getTree(token, activeRepo);
-    setTree(t);
-    setSelectedPath(null);
-    setFileContent("");
-    setExplanation("");
+    setTreeError(null);
+    try {
+      const t = await getTree(token, activeRepo);
+      setTree(t);
+      setSelectedPath(null);
+      setFileContent("");
+      setExplanation("");
+    } catch (e) {
+      setTreeError(e.message);
+    }
   }, [token, activeRepo]);
 
   useEffect(() => {
     setTree([]);
+    setTreeError(null);
     setSelectedPath(null);
     setFileContent("");
     setExplanation("");
@@ -72,6 +79,7 @@ export function useRepoBrowser({ token, activeRepo, anthropicKey }) {
 
   return {
     tree,
+    treeError,
     selectedPath,
     fileContent,
     explanation,

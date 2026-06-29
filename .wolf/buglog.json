@@ -1,0 +1,37 @@
+[
+  {
+    "date": "2026-06-28",
+    "error_message": "Railway healthcheck failed: 1/1 replicas never became healthy (14 attempts over 5min, service unavailable)",
+    "root_cause": "start script used `npx serve -s dist` — npx downloads the serve package at container startup, which exceeds Railway's healthcheck window",
+    "fix": "Added `serve` as a real dependency in package.json and changed start script to `serve -s dist` so it's installed at build time and starts instantly",
+    "tags": ["railway", "deploy", "healthcheck", "npx", "serve"]
+  },
+  {
+    "date": "2026-06-29",
+    "error_message": "⚙ Setup button not visible / 'There is no setup'",
+    "root_cause": "setup-btn and remove-btn had `opacity: 0` with `:hover` reveal — invisible at rest, poor discoverability. User also seeing cached PWA build",
+    "fix": "Removed opacity:0 hover-gating so buttons are always visible. PWA uses registerType autoUpdate; full tab close/reopen activates new SW",
+    "tags": ["css", "ux", "discoverability", "pwa", "service-worker"]
+  },
+  {
+    "date": "2026-06-29",
+    "error_message": "Code tab hangs on perpetual skeleton loader with bad/expired GitHub token, no error shown",
+    "root_cause": "useRepoBrowser.loadTree had no try/catch — a failed getTree call left the tree empty and loading state stuck with no surfaced error",
+    "fix": "Added treeError state + try/catch in loadTree; CodeExplorer shows the error message and a Retry button (onRetry=loadTree)",
+    "tags": ["error-handling", "code-explorer", "github-api", "loading-state"]
+  },
+  {
+    "date": "2026-06-29",
+    "error_message": "Tasks and Output tabs render completely blank (no content, no empty state) before project-log.json exists",
+    "root_cause": "empty-state blocks were gated behind `log && ...` so when log was null (no token / no file) nothing rendered at all",
+    "fix": "TasksTab returns a dedicated empty state when !log; both tabs show empty copy based on task counts rather than log presence",
+    "tags": ["empty-state", "ux", "task-panel"]
+  },
+  {
+    "date": "2026-06-29",
+    "error_message": "Setup button success/failure visually indistinguishable; no feedback on failure",
+    "root_cause": "toast auto-dismissed after 3s, easy to miss; handleSetup already had error toast but timing too short",
+    "fix": "Extended toast duration from 3s to 5s in useToast.js",
+    "tags": ["toast", "feedback", "ux"]
+  }
+]

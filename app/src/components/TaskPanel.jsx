@@ -15,269 +15,264 @@ export function TaskCard({ task, showCheck = false, onToggle }) {
         <div className={`task-status-dot ${task.status}`} />
       )}
       <div className="task-body">
-        <div
-          className="task-title"
-          style={
-            task.status === "done"
-              ? { textDecoration: "line-through", opacity: 0.6 }
-              : {}
-          }
-        >
+        <div className={`task-title ${task.status === "done" ? "done" : ""}`}>
           {task.title}
         </div>
         <div className="task-meta">
-          {task.createdAt && (
-            <span>{new Date(task.createdAt).toLocaleDateString()}</span>
-          )}
+          {task.createdAt && <span>{new Date(task.createdAt).toLocaleDateString()}</span>}
           {task.source === "user" && <span> · you</span>}
           {task.source === "claude-code" && <span> · claude</span>}
-          {task.completedAt && (
-            <span>
-              {" "}
-              · done {new Date(task.completedAt).toLocaleDateString()}
-            </span>
-          )}
+          {task.completedAt && <span> · done {new Date(task.completedAt).toLocaleDateString()}</span>}
         </div>
         {task.note && <div className="output-note">{task.note}</div>}
       </div>
-      <span className={`badge ${task.status}`}>{task.status}</span>
     </div>
   );
 }
 
-export function OutputCard({ task }) {
+function OutputCard({ task }) {
+  const commitUrl = task.commitUrl || null;
+  const commitHash = commitUrl ? commitUrl.split("/commit/")[1]?.slice(0, 7) : null;
+  const branch = task.branch || "main";
+
   return (
     <div className="output-card">
-      <div className="output-title">{task.title}</div>
-      <div className="output-meta">
-        {task.createdAt && new Date(task.createdAt).toLocaleDateString()}
-        {" · "}
-        <span className={`badge ${task.status}`}>{task.status}</span>
+      <div className="output-header">
+        <div className="output-title">{task.title}</div>
+        <div className="output-time">
+          {task.completedAt ? new Date(task.completedAt).toLocaleString() : task.createdAt ? new Date(task.createdAt).toLocaleString() : ""}
+        </div>
       </div>
-      {task.note && <div className="output-note">{task.note}</div>}
+      {task.note && <div className="output-note-text">{task.note}</div>}
+      {(commitHash || branch) && (
+        <div>
+          <span className="output-commit">
+            <span className="output-branch-icon">⎇</span>
+            {branch}
+            {commitHash && <span className="output-commit-hash">{commitHash}</span>}
+          </span>
+        </div>
+      )}
     </div>
   );
 }
 
-function LoadingState({ skeleton = "tasks" }) {
-  if (skeleton === "tasks") {
-    return (
-      <div style={{ paddingTop: 8 }}>
-        {Array.from({ length: 4 }).map((_, i) => (
-          <SkeletonCard key={i} lines={1} />
-        ))}
-      </div>
-    );
-  }
+function LoadingState() {
   return (
-    <div className="empty">
-      <div className="empty-icon spinning">⟳</div>
-      <p>Loading...</p>
+    <div style={{ paddingTop: 8 }}>
+      {Array.from({ length: 4 }).map((_, i) => (
+        <SkeletonCard key={i} lines={1} />
+      ))}
     </div>
   );
 }
 
-export function InputTab({
-  idea,
-  setIdea,
-  pushInput,
-  pushing,
-  inputTasks,
-  log,
-  loading,
-  onToggle,
-}) {
-  if (!log && loading) return <LoadingState skeleton="tasks" />;
+export function InputTab({ idea, setIdea, pushInput, pushing, inputTasks, log, loading, onToggle, overview, overviewLoading }) {
+  if (!log && loading) return <LoadingState />;
 
   return (
     <>
+      <div className="overview-card">
+        <div className="overview-label">🧠 Project overview</div>
+        {overviewLoading ? (
+          <div className="skeleton-line" style={{ height: 11, width: "80%", marginTop: 4 }} />
+        ) : overview ? (
+          <p className="overview-text">{overview}</p>
+        ) : (
+          <p className="overview-text" style={{ color: "#484F58" }}>
+            Add a Claude API key in the sidebar to get an auto-generated overview of this codebase.
+          </p>
+        )}
+      </div>
       <div className="input-box">
-        <label>New note / idea / task</label>
+        <label>New input</label>
         <textarea
-          placeholder="Write a note, idea, or task... Claude Code will pick it up from project-log.json"
+          placeholder="Drop an idea, note, or instruction for Claude to pick up…"
           value={idea}
           onChange={(e) => setIdea(e.target.value)}
         />
         <div className="input-actions">
-          <button
-            className="push-btn"
-            onClick={() => pushInput(idea)}
-            disabled={pushing || !idea.trim()}
-          >
-            {pushing ? "Pushing..." : "Push to GitHub"}
+          <button className="push-btn" onClick={() => pushInput(idea)} disabled={pushing || !idea.trim()}>
+            {pushing ? "Pushing..." : "Push input →"}
           </button>
         </div>
       </div>
 
       {inputTasks.length > 0 && (
-        <div className="section-group">
-          <div className="section-label">
-            Your inputs{" "}
-            <span className="section-count">{inputTasks.length}</span>
+        <>
+          <div className="section-label" style={{ marginBottom: 12, fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "1.5px", textTransform: "uppercase", color: "#6E7681" }}>
+            Pushed inputs
           </div>
-          {inputTasks.map((t) => (
-            <TaskCard key={t.id} task={t} onToggle={onToggle} />
-          ))}
-        </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+            {inputTasks.map((t) => (
+              <div key={t.id} className="input-item">
+                <span className="input-dot" />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div className="input-text">{t.title}</div>
+                  <div className="input-time">{t.createdAt ? new Date(t.createdAt).toLocaleString() : ""}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {log && inputTasks.length === 0 && (
         <div className="empty">
-          <div className="empty-icon">✍️</div>
-          <h2>No inputs yet</h2>
-          <p>Write your first note above and push it to GitHub.</p>
+          <div className="empty-icon">✶</div>
+          <h2>Nothing pushed yet</h2>
+          <p>Write an idea or instruction above and push it. Claude Code will pick it up from project-log.json.</p>
         </div>
       )}
     </>
   );
 }
 
-export function TasksTab({
-  todoTasks,
-  doneTasks,
-  blockedTasks,
-  tasks,
-  log,
-  loading,
-  onToggle,
-}) {
-  if (!log && loading) return <LoadingState skeleton="tasks" />;
+export function TasksTab({ todoTasks, doneTasks, blockedTasks, tasks, log, loading, onToggle }) {
+  if (!log && loading) return <LoadingState />;
+  if (!log) return (
+    <div className="empty">
+      <div className="empty-icon">📋</div>
+      <h2>No tasks yet</h2>
+      <p>Tasks appear here once Claude Code starts working. Make sure your GitHub token is saved and the repo has a project-log.json.</p>
+    </div>
+  );
 
   return (
-    <>
+    <div style={{ display: "flex", flexDirection: "column", gap: 26 }}>
       {todoTasks.length > 0 && (
-        <div className="section-group">
+        <div>
           <div className="section-label">
-            To do{" "}
+            <span className="section-label-dot" style={{ background: "var(--amber)" }} />
+            <span className="section-label-text">To do</span>
             <span className="section-count">{todoTasks.length}</span>
           </div>
-          {todoTasks.map((t) => (
-            <TaskCard key={t.id} task={t} showCheck onToggle={onToggle} />
-          ))}
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {todoTasks.map((t) => <TaskCard key={t.id} task={t} showCheck onToggle={onToggle} />)}
+          </div>
         </div>
       )}
 
       {blockedTasks.length > 0 && (
-        <div className="section-group">
+        <div>
           <div className="section-label">
-            Blocked{" "}
+            <span className="section-label-dot" style={{ background: "var(--red)" }} />
+            <span className="section-label-text">Blocked</span>
             <span className="section-count">{blockedTasks.length}</span>
           </div>
-          {blockedTasks.map((t) => (
-            <TaskCard key={t.id} task={t} onToggle={onToggle} />
-          ))}
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {blockedTasks.map((t) => <TaskCard key={t.id} task={t} />)}
+          </div>
         </div>
       )}
 
       {doneTasks.length > 0 && (
-        <div className="section-group">
+        <div>
           <div className="section-label">
-            Done{" "}
+            <span className="section-label-dot" style={{ background: "var(--emerald)" }} />
+            <span className="section-label-text">Done</span>
             <span className="section-count">{doneTasks.length}</span>
           </div>
-          {doneTasks.map((t) => (
-            <TaskCard key={t.id} task={t} showCheck onToggle={onToggle} />
-          ))}
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {doneTasks.map((t) => <TaskCard key={t.id} task={t} showCheck onToggle={onToggle} />)}
+          </div>
         </div>
       )}
 
-      {log && tasks.length === 0 && (
+      {todoTasks.length === 0 && blockedTasks.length === 0 && doneTasks.length === 0 && (
         <div className="empty">
           <div className="empty-icon">📭</div>
           <h2>No tasks yet</h2>
-          <p>
-            Add inputs from the Input tab, or let Claude Code create tasks
-            in project-log.json.
-          </p>
+          <p>Add inputs from the Input tab, or let Claude Code create tasks in project-log.json.</p>
         </div>
       )}
-    </>
+    </div>
   );
 }
 
 function QuestionCard({ task, onAnswer }) {
-  const [custom, setCustom] = useState("");
   const [answering, setAnswering] = useState(false);
+  const [answered, setAnswered] = useState(false);
+  const [choice, setChoice] = useState(null);
+  const [custom, setCustom] = useState("");
 
   const handleAnswer = async (answer) => {
-    if (!answer.trim()) return;
+    if (!answer.trim() || answering) return;
     setAnswering(true);
     try {
       await onAnswer(task.id, answer.trim());
+      setChoice(answer.trim());
+      setAnswered(true);
     } finally {
       setAnswering(false);
     }
   };
 
+  const isAnswered = answered || task.status === "done";
+  const displayChoice = choice || task.answer;
+
   return (
-    <div className="question-card">
-      <div className="question-label">Claude needs your input</div>
+    <div className={`question-card ${isAnswered ? "answered" : ""}`}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 13 }}>
+        <span className={`question-tag ${isAnswered ? "answered" : "open"}`}>
+          {isAnswered ? "Answered" : "Needs you"}
+        </span>
+        <span className="question-time">
+          {task.createdAt ? new Date(task.createdAt).toLocaleString() : ""}
+        </span>
+      </div>
       <div className="question-title">{task.title}</div>
-      {task.note && <div className="output-note">{task.note}</div>}
-      {task.options?.length > 0 ? (
+      {task.note && <div className="output-note" style={{ marginBottom: 14 }}>{task.note}</div>}
+
+      {isAnswered ? (
+        <div className="question-answered">
+          <span style={{ color: "var(--emerald)", fontSize: 15 }}>✓</span>
+          <span className="question-answered-text">
+            You chose <strong style={{ color: "var(--text)" }}>{displayChoice}</strong>
+          </span>
+        </div>
+      ) : task.options?.length > 0 ? (
         <div className="question-options">
           {task.options.map((opt) => (
-            <button
-              key={opt}
-              className="option-btn"
-              onClick={() => handleAnswer(opt)}
-              disabled={answering}
-            >
-              {opt}
+            <button key={opt} className="option-btn" onClick={() => handleAnswer(opt)} disabled={answering}>
+              <span className="option-radio" />
+              <span>{opt}</span>
             </button>
           ))}
         </div>
       ) : (
-        <div className="question-free">
+        <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
           <input
             className="s-input"
             placeholder="Your answer..."
             value={custom}
             onChange={(e) => setCustom(e.target.value)}
-            onKeyDown={(e) =>
-              e.key === "Enter" && custom.trim() && handleAnswer(custom)
-            }
+            onKeyDown={(e) => e.key === "Enter" && custom.trim() && handleAnswer(custom)}
           />
-          <button
-            className="s-btn"
-            onClick={() => handleAnswer(custom)}
-            disabled={answering || !custom.trim()}
-          >
+          <button className="s-btn" onClick={() => handleAnswer(custom)} disabled={answering || !custom.trim()}>
             {answering ? "..." : "Answer"}
           </button>
         </div>
       )}
-      <div className="question-meta">
-        {task.createdAt && new Date(task.createdAt).toLocaleString()}
-      </div>
     </div>
   );
 }
 
 export function QuestionsTab({ questionTasks, log, loading, onAnswer }) {
-  if (!log && loading) return <LoadingState skeleton="tasks" />;
+  if (!log && loading) return <LoadingState />;
+
+  const allAnswered = log && questionTasks.length === 0;
 
   return (
     <>
-      {questionTasks.length > 0 && (
-        <div className="section-group">
-          <div className="section-label">
-            Waiting for your answer{" "}
-            <span className="section-count">{questionTasks.length}</span>
-          </div>
-          {questionTasks.map((t) => (
-            <QuestionCard key={t.id} task={t} onAnswer={onAnswer} />
-          ))}
-        </div>
-      )}
-      {log && questionTasks.length === 0 && (
+      {questionTasks.map((t) => (
+        <QuestionCard key={t.id} task={t} onAnswer={onAnswer} />
+      ))}
+      {allAnswered && (
         <div className="empty">
-          <div className="empty-icon">✅</div>
-          <h2>No questions</h2>
-          <p>
-            Claude is working autonomously. When it needs a decision from
-            you, it will appear here.
-          </p>
+          <div className="empty-icon">✶</div>
+          <h2>All caught up</h2>
+          <p>New questions from Claude will land here.</p>
         </div>
       )}
     </>
@@ -285,30 +280,18 @@ export function QuestionsTab({ questionTasks, log, loading, onAnswer }) {
 }
 
 export function OutputTab({ outputTasks, log, loading }) {
-  if (!log && loading) return <LoadingState skeleton="tasks" />;
+  if (!log && loading) return <LoadingState />;
 
   return (
     <>
-      {outputTasks.length > 0 && (
-        <div className="section-group">
-          <div className="section-label">
-            Claude Code output{" "}
-            <span className="section-count">{outputTasks.length}</span>
-          </div>
-          {outputTasks.map((t) => (
-            <OutputCard key={t.id} task={t} />
-          ))}
-        </div>
-      )}
-
-      {log && outputTasks.length === 0 && (
+      {outputTasks.map((t) => (
+        <OutputCard key={t.id} task={t} />
+      ))}
+      {outputTasks.length === 0 && (
         <div className="empty">
           <div className="empty-icon">🤖</div>
           <h2>No output yet</h2>
-          <p>
-            Claude Code hasn't written anything yet. Run Claude Code in your
-            repo — it will read your inputs and write results here.
-          </p>
+          <p>Claude Code hasn't written anything yet. Push an idea in the Input tab, then run Claude Code in your repo — it will read your inputs and report results here.</p>
         </div>
       )}
     </>

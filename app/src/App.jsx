@@ -8,58 +8,48 @@ import {
   OutputTab,
 } from "./components/TaskPanel.jsx";
 import CodeExplorer from "./components/CodeExplorer.jsx";
+import BrainTab from "./components/BrainTab.jsx";
 import StatusBar from "./components/StatusBar.jsx";
 import Toast from "./components/Toast.jsx";
 import { useToast } from "./hooks/useToast.js";
 import { useProjectLog } from "./hooks/useProjectLog.js";
 import { useRepoBrowser } from "./hooks/useRepoBrowser.js";
+import { useBrain } from "./hooks/useBrain.js";
+import { PROJ_COLORS, getProjectOverview } from "./api/github.js";
 
-const TABS = ["input", "questions", "tasks", "output", "code"];
+const TABS = ["input", "questions", "tasks", "output", "code", "brain"];
 
 export default function App() {
-  // ── Shared state ──
-  const [token, setToken] = useState(
-    () => localStorage.getItem("gh_token") || ""
-  );
+  const [token, setToken] = useState(() => localStorage.getItem("gh_token") || "");
   const [tokenInput, setTokenInput] = useState("");
   const [repos, setRepos] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem("gh_repos") || "[]");
-    } catch {
-      return [];
-    }
+    try { return JSON.parse(localStorage.getItem("gh_repos") || "[]"); }
+    catch { return []; }
   });
   const [repoInput, setRepoInput] = useState("");
   const [activeRepo, setActiveRepo] = useState(null);
   const [tab, setTab] = useState("input");
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [anthropicKey, setAnthropicKey] = useState(
-    () => localStorage.getItem("anthropic_key") || ""
-  );
+  const [anthropicKey, setAnthropicKey] = useState(() => localStorage.getItem("anthropic_key") || "");
 
-  const [storageType, setStorageType] = useState(
-    () => localStorage.getItem("storage_type") || "github"
-  );
-  const [webdavUrl, setWebdavUrl] = useState(
-    () => localStorage.getItem("webdav_url") || ""
-  );
-  const [webdavUser, setWebdavUser] = useState(
-    () => localStorage.getItem("webdav_user") || ""
-  );
-  const [webdavPass, setWebdavPass] = useState(
-    () => localStorage.getItem("webdav_pass") || ""
-  );
+  const [brainRepo, setBrainRepo] = useState(() => localStorage.getItem("brain_repo") || "");
 
-  const storage =
-    storageType === "webdav"
-      ? { type: "webdav", baseUrl: webdavUrl, credentials: { user: webdavUser, pass: webdavPass } }
-      : { type: "github" };
+  const [storageType, setStorageType] = useState(() => localStorage.getItem("storage_type") || "github");
+  const [webdavUrl, setWebdavUrl] = useState(() => localStorage.getItem("webdav_url") || "");
+  const [webdavUser, setWebdavUser] = useState(() => localStorage.getItem("webdav_user") || "");
+  const [webdavPass, setWebdavPass] = useState(() => localStorage.getItem("webdav_pass") || "");
+
+  const storage = storageType === "webdav"
+    ? { type: "webdav", baseUrl: webdavUrl, credentials: { user: webdavUser, pass: webdavPass } }
+    : { type: "github" };
 
   const [loading, setLoading] = useState(false);
   const [statusMsg, setStatusMsg] = useState("Ready");
   const [statusOk, setStatusOk] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState(null);
+  const [overview, setOverview] = useState(null);
+  const [overviewLoading, setOverviewLoading] = useState(false);
 
-  // ── Hooks ──
   const { toast, showToast } = useToast();
   const projectLog = useProjectLog({
     token,
@@ -71,8 +61,8 @@ export default function App() {
     },
   });
   const repoBrowser = useRepoBrowser({ token, activeRepo, anthropicKey });
+  const brain = useBrain({ token, brainRepo });
 
-  // ── Handlers ──
   const saveToken = () => {
     localStorage.setItem("gh_token", tokenInput);
     setToken(tokenInput);
@@ -105,13 +95,8 @@ export default function App() {
     try {
       const l = await projectLog.loadLog();
       if (l) {
-        setStatusMsg(
-          `Last updated: ${
-            l.lastUpdated
-              ? new Date(l.lastUpdated).toLocaleString()
-              : "never"
-          }`
-        );
+        setLastUpdated(l.lastUpdated ? new Date(l.lastUpdated) : null);
+        setStatusMsg(l.lastUpdated ? new Date(l.lastUpdated).toLocaleString() : "never");
         setStatusOk(true);
       }
     } catch (e) {
@@ -135,56 +120,56 @@ export default function App() {
     }
   }, [token, activeRepo, repoBrowser]);
 
-  // ── Effects ──
   useEffect(() => {
     if (!activeRepo) return;
     setLoading(false);
-  }, [activeRepo]);
+    setOverview(null);
+    if (!token || !anthropicKey) return;
+    setOverviewLoading(true);
+    getProjectOverview(token, activeRepo, anthropicKey)
+      .then((text) => setOverview(text))
+      .finally(() => setOverviewLoading(false));
+  }, [activeRepo, token, anthropicKey]);
 
   useEffect(() => {
+    if (tab === "brain") {
+      brain.loadWiki();
+      return;
+    }
     if (!activeRepo) return;
     if (tab === "code") loadTree();
     else loadLog();
   }, [activeRepo, tab, loadLog, loadTree]);
 
-  // Keyboard shortcuts
   useEffect(() => {
     const handleKey = (e) => {
       const tag = e.target.tagName;
-      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT")
-        return;
-
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
       if (e.key === "Escape") setSidebarOpen(false);
-
       if (e.key === "r" && !e.metaKey && !e.ctrlKey) {
         if (tab === "code") loadTree();
         else loadLog();
       }
-
       if (e.key === "n" && activeRepo) {
         document.querySelector(".input-box textarea")?.focus();
       }
-
       const numKey = parseInt(e.key);
-      if (numKey >= 1 && numKey <= 5) {
-        const idx = numKey - 1;
-        if (TABS[idx]) setTab(TABS[idx]);
-      }
+      if (numKey >= 1 && numKey <= 6 && TABS[numKey - 1]) setTab(TABS[numKey - 1]);
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, [activeRepo, tab, loadTree, loadLog]);
 
-  // ── Derived ──
-  const pendingCount =
-    projectLog.todoTasks.length +
-    projectLog.blockedTasks.length +
-    projectLog.questionTasks.length;
-  const displayTree =
-    tab === "code" ? repoBrowser.buildDisplayTree() : [];
+  const pendingCount = projectLog.todoTasks.length + projectLog.blockedTasks.length + projectLog.questionTasks.length;
+  const displayTree = tab === "code" ? repoBrowser.buildDisplayTree() : [];
+
+  const activeRepoIndex = repos.indexOf(activeRepo);
+  const activeColor = activeRepoIndex >= 0 ? PROJ_COLORS[activeRepoIndex % PROJ_COLORS.length] : PROJ_COLORS[0];
+  const storageLabel = storageType === "webdav" ? (webdavUrl || "nas.local") : (activeRepo || "");
+  const activeProjectName = activeRepo ? (activeRepo.split("/")[1] || activeRepo) : "No project";
 
   return (
-    <>
+    <div className="shell">
       <Sidebar
         token={token}
         tokenInput={tokenInput}
@@ -203,6 +188,8 @@ export default function App() {
         setSidebarOpen={setSidebarOpen}
         anthropicKey={anthropicKey}
         setAnthropicKey={setAnthropicKey}
+        brainRepo={brainRepo}
+        setBrainRepo={(r) => { setBrainRepo(r); localStorage.setItem("brain_repo", r); }}
         storageType={storageType}
         setStorageType={(t) => { setStorageType(t); localStorage.setItem("storage_type", t); }}
         webdavUrl={webdavUrl}
@@ -211,129 +198,136 @@ export default function App() {
         setWebdavUser={(v) => { setWebdavUser(v); localStorage.setItem("webdav_user", v); }}
         webdavPass={webdavPass}
         setWebdavPass={(v) => { setWebdavPass(v); localStorage.setItem("webdav_pass", v); }}
+        onShowToast={showToast}
       />
 
-      <main className="main">
-        {/* ── Top bar ── */}
-        <div className="topbar">
-          <button
-            className="menu-btn"
-            onClick={() => setSidebarOpen(true)}
-          >
-            ☰
+      <div className="main">
+        {/* Mobile topbar */}
+        <div className="topbar-mobile">
+          <button className="menu-btn" onClick={() => setSidebarOpen(true)}>
+            <span className="hamburger-line" />
+            <span className="hamburger-line" />
+            <span className="hamburger-line" />
           </button>
-          {activeRepo ? (
-            <>
-              <h1>{activeRepo.split("/")[1]}</h1>
-              <span className="repo-label">{activeRepo}</span>
-              <div className="tabs">
-                {TABS.map((t) => (
-                  <button
-                    key={t}
-                    className={`tab ${tab === t ? "active" : ""}`}
-                    onClick={() => setTab(t)}
-                  >
-                    {t.charAt(0).toUpperCase() + t.slice(1)}
-                    {t === "questions" && projectLog.questionTasks.length > 0 && (
-                      <span className="tab-badge">{projectLog.questionTasks.length}</span>
-                    )}
-                  </button>
-                ))}
-              </div>
-              <button
-                className="refresh-btn"
-                onClick={tab === "code" ? loadTree : loadLog}
-              >
-                <span className={loading ? "spinning" : ""}>⟳</span>
-              </button>
-            </>
-          ) : (
-            <h1 style={{ color: "var(--muted)" }}>Select a project</h1>
-          )}
+          <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
+            {activeRepo && <span className="proj-dot-sm" style={{ background: activeColor, boxShadow: `0 0 0 3px ${activeColor}22` }} />}
+            <span className="topbar-project-name">{activeProjectName}</span>
+          </div>
+          <div style={{ width: 38 }} />
         </div>
 
-        {/* ── Content ── */}
+        {/* Desktop header */}
+        <div className="desk-header">
+          {activeRepo && <span className="proj-dot-sm" style={{ background: activeColor, boxShadow: `0 0 0 3px ${activeColor}22` }} />}
+          <span className="desk-header-name">{activeProjectName}</span>
+          {activeRepo && <span className="desk-header-storage">{storageLabel}</span>}
+        </div>
+
+        {/* Tabs strip */}
+        <div className="tabs-strip">
+          {TABS.map((t) => (
+            <button key={t} className={`tab ${tab === t ? "active" : ""}`} onClick={() => setTab(t)}>
+              {t.charAt(0).toUpperCase() + t.slice(1)}
+              {t === "questions" && projectLog.questionTasks.length > 0 && (
+                <span className="tab-badge">{projectLog.questionTasks.length}</span>
+              )}
+            </button>
+          ))}
+        </div>
+
+        {/* Content */}
         <div className="content">
-          {/* Empty state */}
-          {!activeRepo && (
-            <div className="empty">
-              <div className="empty-icon">📦</div>
-              <h2>No project selected</h2>
-              <p>
-                Add a GitHub repo in the sidebar and select it. Claude Code
-                will read and write to project-log.json in the repo.
-              </p>
-            </div>
-          )}
+          <div className="content-inner">
+            {!activeRepo && (
+              <div className="empty">
+                <div className="empty-icon">📦</div>
+                <h2>No project selected</h2>
+                <p>Add a GitHub repo in the sidebar and select it. Claude Code will read and write to project-log.json in the repo.</p>
+              </div>
+            )}
 
-          {/* Input tab */}
-          {activeRepo && tab === "input" && (
-            <InputTab
-              idea={projectLog.idea}
-              setIdea={projectLog.setIdea}
-              pushInput={projectLog.pushInput}
-              pushing={projectLog.pushing}
-              inputTasks={projectLog.inputTasks}
-              log={projectLog.log}
-              loading={loading}
-              onToggle={projectLog.toggleTask}
-            />
-          )}
+            {activeRepo && tab === "input" && (
+              <InputTab
+                idea={projectLog.idea}
+                setIdea={projectLog.setIdea}
+                pushInput={projectLog.pushInput}
+                pushing={projectLog.pushing}
+                inputTasks={projectLog.inputTasks}
+                log={projectLog.log}
+                loading={loading}
+                onToggle={projectLog.toggleTask}
+                overview={overview}
+                overviewLoading={overviewLoading}
+              />
+            )}
 
-          {/* Questions tab */}
-          {activeRepo && tab === "questions" && (
-            <QuestionsTab
-              questionTasks={projectLog.questionTasks}
-              log={projectLog.log}
-              loading={loading}
-              onAnswer={projectLog.answerQuestion}
-            />
-          )}
+            {activeRepo && tab === "questions" && (
+              <QuestionsTab
+                questionTasks={projectLog.questionTasks}
+                log={projectLog.log}
+                loading={loading}
+                onAnswer={projectLog.answerQuestion}
+              />
+            )}
 
-          {/* Output tab */}
-          {activeRepo && tab === "output" && (
-            <OutputTab
-              outputTasks={projectLog.outputTasks}
-              log={projectLog.log}
-              loading={loading}
-            />
-          )}
+            {activeRepo && tab === "output" && (
+              <OutputTab
+                outputTasks={projectLog.outputTasks}
+                log={projectLog.log}
+                loading={loading}
+              />
+            )}
 
-          {/* Tasks tab */}
-          {activeRepo && tab === "tasks" && (
-            <TasksTab
-              todoTasks={projectLog.todoTasks}
-              doneTasks={projectLog.doneTasks}
-              blockedTasks={projectLog.blockedTasks}
-              tasks={projectLog.tasks}
-              log={projectLog.log}
-              loading={loading}
-              onToggle={projectLog.toggleTask}
-            />
-          )}
+            {activeRepo && tab === "tasks" && (
+              <TasksTab
+                todoTasks={projectLog.todoTasks}
+                doneTasks={projectLog.doneTasks}
+                blockedTasks={projectLog.blockedTasks}
+                tasks={projectLog.tasks}
+                log={projectLog.log}
+                loading={loading}
+                onToggle={projectLog.toggleTask}
+              />
+            )}
 
-          {/* Code tab */}
-          {activeRepo && tab === "code" && (
-            <CodeExplorer
-              displayTree={displayTree}
-              loading={loading}
-              selectedPath={repoBrowser.selectedPath}
-              fileContent={repoBrowser.fileContent}
-              explanation={repoBrowser.explanation}
-              explaining={repoBrowser.explaining}
-              onSelectFile={repoBrowser.selectFile}
-            />
-          )}
+            {activeRepo && tab === "code" && (
+              <CodeExplorer
+                displayTree={displayTree}
+                tree={repoBrowser.tree}
+                treeError={repoBrowser.treeError}
+                loading={loading}
+                selectedPath={repoBrowser.selectedPath}
+                fileContent={repoBrowser.fileContent}
+                explanation={repoBrowser.explanation}
+                explaining={repoBrowser.explaining}
+                onSelectFile={repoBrowser.selectFile}
+                onRetry={loadTree}
+              />
+            )}
+
+            {tab === "brain" && (
+              <BrainTab
+                brainRepo={brainRepo}
+                wikiFiles={brain.wikiFiles}
+                rawCount={brain.rawCount}
+                selectedFile={brain.selectedFile}
+                fileContent={brain.fileContent}
+                loadingList={brain.loadingList}
+                loadingFile={brain.loadingFile}
+                pushing={brain.pushing}
+                onLoadWiki={brain.loadWiki}
+                onSelectFile={brain.selectFile}
+                onPushRaw={brain.pushRaw}
+                onShowToast={showToast}
+              />
+            )}
+          </div>
         </div>
 
-        <StatusBar
-          statusMsg={statusMsg}
-          statusOk={statusOk}
-          activeRepo={activeRepo}
-        />
-      </main>
+        <StatusBar statusMsg={statusMsg} statusOk={statusOk} lastUpdated={lastUpdated} loading={loading} />
+      </div>
 
       <Toast toast={toast} />
-    </>
+    </div>
   );
 }

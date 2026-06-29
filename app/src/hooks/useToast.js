@@ -5,7 +5,7 @@ export function useToast() {
 
   const showToast = useCallback((msg, type = "success") => {
     setToast({ msg, type });
-    setTimeout(() => setToast(null), 3000);
+    setTimeout(() => setToast(null), 5000);
   }, []);
 
   return { toast, showToast };
