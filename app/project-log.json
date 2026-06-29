@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-28T08:00:00.000Z",
+  "lastUpdated": "2026-06-29T00:08:02.000Z",
   "tasks": [
     {
       "id": 1,
@@ -44,6 +44,16 @@
       "source": "claude-code",
       "note": "שינוי קבצים: api/github.js, App.jsx, components/Sidebar.jsx, App.css.\n\napi/github.js: הוספתי פונקציה getUser(token) שקוראת ל-GitHub /user API ומחזירה פרופיל המשתמש.\n\nApp.jsx: שיניתי saveToken() ל-async — עכשיו קוראת ל-getUser() לפני שמירת ה-token. אם הבקשה מצליחה: שומרת token + פרופיל (login, avatar_url, name) ב-localStorage תחת gh_user, ומציגה toast 'Connected as @username'. אם נכשלת: מציגה toast עם הודעת שגיאה ולא שומרת כלום. הוספתי disconnectToken() שמנקה גם gh_token וגם gh_user. הוספתי ghUser state שנטען מ-localStorage בהפעלה.\n\nSidebar.jsx: ה-'connected badge' מציג עכשיו avatar קטן (18px) + @username במקום הטקסט הגנרי 'Connected'. כפתור הכניסה שונה ל-'Verify & Save Token'. מקבל disconnectToken במקום setToken ישירות.\n\nApp.css: הוספתי .gh-avatar (18px, עגול, border).\n\nהחלטות: פירשתי 'API endpoint לאימות' בהקשר של React PWA ללא backend — המשמעות הטבעית היא אימות token מול GitHub API ב-client-side. לא שיניתי לוגיקת repo, hooks, WebDAV, קיצורי מקלדת.",
       "commitUrl": "https://github.com/itaypeter/Project-hub/commit/135575d3461ff2bddf767bff03465f7a339fc9ad"
+    },
+    {
+      "id": 1782691682903,
+      "title": "בדיקת backlog — אין משימות ממתינות",
+      "status": "done",
+      "type": "output",
+      "source": "claude-code",
+      "createdAt": "2026-06-29T00:08:02.000Z",
+      "completedAt": "2026-06-29T00:08:02.000Z",
+      "note": "ריצת autopilot ב-2026-06-29. כל 5 המשימות הקיימות במצב done. אין idea או todo ממתינים. הרצה הבאה תטפל במשימות חדשות שהמשתמש יוסיף."
     }
   ]
 }
