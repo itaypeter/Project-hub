@@ -37,6 +37,13 @@ export default function App() {
   const [activeRepo, setActiveRepo] = useState(null);
   const [tab, setTab] = useState("input");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem("theme");
+    const prefersDark = !window.matchMedia("(prefers-color-scheme: light)").matches;
+    const isDark = saved ? saved === "dark" : prefersDark;
+    document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
+    return isDark;
+  });
   const [anthropicKey, setAnthropicKey] = useState(
     () => localStorage.getItem("anthropic_key") || ""
   );
@@ -53,14 +60,6 @@ export default function App() {
   const [webdavPass, setWebdavPass] = useState(
     () => localStorage.getItem("webdav_pass") || ""
   );
-
-  const [darkMode, setDarkMode] = useState(() => {
-    const saved = localStorage.getItem("theme");
-    const prefersDark = !window.matchMedia("(prefers-color-scheme: light)").matches;
-    const isDark = saved ? saved === "dark" : prefersDark;
-    document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
-    return isDark;
-  });
 
   const storage =
     storageType === "webdav"

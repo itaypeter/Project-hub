@@ -25,7 +25,7 @@ export default function Sidebar({
             <button
               className="theme-toggle"
               onClick={toggleDarkMode}
-              title={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+              title={darkMode ? "Switch to light mode (d)" : "Switch to dark mode (d)"}
             >
               {darkMode ? "☀️" : "🌙"}
             </button>
