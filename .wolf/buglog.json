@@ -4,34 +4,113 @@
     "error_message": "Railway healthcheck failed: 1/1 replicas never became healthy (14 attempts over 5min, service unavailable)",
     "root_cause": "start script used `npx serve -s dist` — npx downloads the serve package at container startup, which exceeds Railway's healthcheck window",
     "fix": "Added `serve` as a real dependency in package.json and changed start script to `serve -s dist` so it's installed at build time and starts instantly",
-    "tags": ["railway", "deploy", "healthcheck", "npx", "serve"]
+    "tags": [
+      "railway",
+      "deploy",
+      "healthcheck",
+      "npx",
+      "serve"
+    ]
   },
   {
     "date": "2026-06-29",
     "error_message": "⚙ Setup button not visible / 'There is no setup'",
     "root_cause": "setup-btn and remove-btn had `opacity: 0` with `:hover` reveal — invisible at rest, poor discoverability. User also seeing cached PWA build",
     "fix": "Removed opacity:0 hover-gating so buttons are always visible. PWA uses registerType autoUpdate; full tab close/reopen activates new SW",
-    "tags": ["css", "ux", "discoverability", "pwa", "service-worker"]
+    "tags": [
+      "css",
+      "ux",
+      "discoverability",
+      "pwa",
+      "service-worker"
+    ]
   },
   {
     "date": "2026-06-29",
     "error_message": "Code tab hangs on perpetual skeleton loader with bad/expired GitHub token, no error shown",
     "root_cause": "useRepoBrowser.loadTree had no try/catch — a failed getTree call left the tree empty and loading state stuck with no surfaced error",
     "fix": "Added treeError state + try/catch in loadTree; CodeExplorer shows the error message and a Retry button (onRetry=loadTree)",
-    "tags": ["error-handling", "code-explorer", "github-api", "loading-state"]
+    "tags": [
+      "error-handling",
+      "code-explorer",
+      "github-api",
+      "loading-state"
+    ]
   },
   {
     "date": "2026-06-29",
     "error_message": "Tasks and Output tabs render completely blank (no content, no empty state) before project-log.json exists",
     "root_cause": "empty-state blocks were gated behind `log && ...` so when log was null (no token / no file) nothing rendered at all",
     "fix": "TasksTab returns a dedicated empty state when !log; both tabs show empty copy based on task counts rather than log presence",
-    "tags": ["empty-state", "ux", "task-panel"]
+    "tags": [
+      "empty-state",
+      "ux",
+      "task-panel"
+    ]
   },
   {
     "date": "2026-06-29",
     "error_message": "Setup button success/failure visually indistinguishable; no feedback on failure",
     "root_cause": "toast auto-dismissed after 3s, easy to miss; handleSetup already had error toast but timing too short",
     "fix": "Extended toast duration from 3s to 5s in useToast.js",
-    "tags": ["toast", "feedback", "ux"]
+    "tags": [
+      "toast",
+      "feedback",
+      "ux"
+    ]
+  },
+  {
+    "date": "2026-06-30",
+    "error_message": "Hub Autopilot runs every 2h but does nothing; all GitHub features in the app return 401",
+    "root_cause": "GitHub token ghp_148... is expired/revoked (401). It is hardcoded in 4 places in the autopilot trigger prompt (brain curl x2, backlog curl, git remote), so every autopilot run fails at Step 0/1 silently. Token also stored in plaintext in the trigger config.",
+    "fix": "PENDING — user must generate a new ghp_ (repo scope), then RemoteTrigger update trig_01Hyk3nY4NjgEadfHt43APXM to swap the token in all 4 spots, then paste into Hub sidebar. Long-term: stop hardcoding the token in the prompt (use api_token_hint / secret injection).",
+    "tags": [
+      "github-api",
+      "token",
+      "401",
+      "autopilot",
+      "remote-trigger",
+      "security"
+    ]
+  },
+  {
+    "date": "2026-07-02",
+    "error_message": "GitHub API 404 on repos/itaipeter/ListoPosto and repos/itaipeter/Project-hub — all tabs fail for those projects",
+    "root_cause": "Project entries in Hub sidebar saved with misspelled owner \"itaipeter\" (user email is itaipeter@gmail.com but GitHub account is \"itaypeter\" with a y). GitHub user itaipeter does not exist.",
+    "fix": "Remove the misspelled projects in the sidebar and re-add as itaypeter/<repo>. Token itself was valid — 404 was owner typo, not auth.",
+    "tags": [
+      "github",
+      "config",
+      "typo",
+      "sidebar",
+      "404"
+    ]
+  },
+  {
+    "date": "2026-07-02",
+    "error_message": "Code tab: files unclickable (selection instantly wiped); app hammered GitHub API in infinite loop — 68,350 requests in ~40s; status bar stuck on loading",
+    "root_cause": "Render loop: storage object in App.jsx rebuilt every render -> destabilized useProjectLog.loadLog; App loadTree/loadLog useCallbacks depended on whole hook objects (repoBrowser/projectLog) which are new each render -> tab useEffect depending on them re-fired every render -> fetch -> setState -> render -> repeat. Each loadTree resets selectedPath, so file clicks appeared dead.",
+    "fix": "App.jsx: wrap storage in useMemo; destructure stable inner callbacks (projectLog.loadLog, repoBrowser.loadTree, brain.loadWiki) and use them as useCallback/useEffect deps instead of the hook objects. Verified: 68,350 requests -> 7.",
+    "tags": [
+      "react",
+      "useEffect",
+      "infinite-loop",
+      "useCallback-deps",
+      "code-tab",
+      "rate-limit"
+    ]
+  },
+  {
+    "date": "2026-07-02",
+    "error_message": "Setup button: failed: GitHub 404: (user browser) — but PUT CLAUDE.md returns 200 with the correct classic token",
+    "root_cause": "GitHub returns 404 (not 403) on writes when the token lacks write permission. User likely saved the read-only fine-grained github_pat_11... token in the sidebar instead of the classic ghp_ token. Reads (tree) work, writes 404.",
+    "fix": "Re-save the correct ghp_ classic token (repo scope) via sidebar change button. Code needs no change.",
+    "tags": [
+      "github",
+      "token",
+      "fine-grained",
+      "404",
+      "setup"
+    ]
   }
 ]

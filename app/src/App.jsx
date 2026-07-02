@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import "./App.css";
 import Sidebar from "./components/Sidebar.jsx";
 import {
@@ -39,9 +39,9 @@ export default function App() {
   const [webdavUser, setWebdavUser] = useState(() => localStorage.getItem("webdav_user") || "");
   const [webdavPass, setWebdavPass] = useState(() => localStorage.getItem("webdav_pass") || "");
 
-  const storage = storageType === "webdav"
+  const storage = useMemo(() => storageType === "webdav"
     ? { type: "webdav", baseUrl: webdavUrl, credentials: { user: webdavUser, pass: webdavPass } }
-    : { type: "github" };
+    : { type: "github" }, [storageType, webdavUrl, webdavUser, webdavPass]);
 
   const [loading, setLoading] = useState(false);
   const [statusMsg, setStatusMsg] = useState("Ready");
@@ -88,12 +88,16 @@ export default function App() {
     if (activeRepo === r) setActiveRepo(next[0] || null);
   };
 
+  const { loadLog: fetchLog } = projectLog;
+  const { loadTree: fetchTree } = repoBrowser;
+  const { loadWiki } = brain;
+
   const loadLog = useCallback(async () => {
     if (!token || !activeRepo) return;
     setLoading(true);
     setStatusMsg("Loading...");
     try {
-      const l = await projectLog.loadLog();
+      const l = await fetchLog();
       if (l) {
         setLastUpdated(l.lastUpdated ? new Date(l.lastUpdated) : null);
         setStatusMsg(l.lastUpdated ? new Date(l.lastUpdated).toLocaleString() : "never");
@@ -105,20 +109,20 @@ export default function App() {
     } finally {
       setLoading(false);
     }
-  }, [token, activeRepo, projectLog]);
+  }, [token, activeRepo, fetchLog]);
 
   const loadTree = useCallback(async () => {
     if (!token || !activeRepo) return;
     setLoading(true);
     try {
-      await repoBrowser.loadTree();
+      await fetchTree();
     } catch (e) {
       setStatusMsg(e.message);
       setStatusOk(false);
     } finally {
       setLoading(false);
     }
-  }, [token, activeRepo, repoBrowser]);
+  }, [token, activeRepo, fetchTree]);
 
   useEffect(() => {
     if (!activeRepo) return;
@@ -133,13 +137,13 @@ export default function App() {
 
   useEffect(() => {
     if (tab === "brain") {
-      brain.loadWiki();
+      loadWiki();
       return;
     }
     if (!activeRepo) return;
     if (tab === "code") loadTree();
     else loadLog();
-  }, [activeRepo, tab, loadLog, loadTree]);
+  }, [activeRepo, tab, loadLog, loadTree, loadWiki]);
 
   useEffect(() => {
     const handleKey = (e) => {

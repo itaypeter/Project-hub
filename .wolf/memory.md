@@ -62,3 +62,14 @@
 | session | Toast duration 3s → 5s | useToast.js |
 | session | Logged 5 bugs to buglog.json | .wolf/buglog.json |
 | session | Ran external QA pass (Claude-on-Chrome) — found 5 issues, all fixed | (external) |
+
+## Session: 2026-06-30 (status review + handoff)
+
+| Time | Action | File(s) |
+|------|--------|---------|
+| session | Verified Railway deploy: Online, latest build SUCCESS (59a6a16a), serve-dependency fix held | (railway CLI) |
+| session | Audited autopilot trigger: enabled, cron 0 */2 * * *, sonnet-4-6. Found dead ghp_148 token hardcoded in 4 prompt spots → every run silently failing. Token in plaintext. | (RemoteTrigger get) |
+| session | Wrote dated handoff atop TODO.md; logged dead-token/autopilot bug to buglog.json | TODO.md, .wolf/buglog.json |
+- 2026-07-02: Rotated GitHub token — new ghp_Oax... verified (repo,workflow,project scopes), swapped into all 4 spots of Hub Autopilot trigger trig_01Hyk3nY4NjgEadfHt43APXM via RemoteTrigger update; TODO.md handoff updated. Remaining: paste token in sidebar, revoke old tokens, brain repo fixes.
+- 2026-07-02: Playwright-verified deployed app with new token — all tabs work, brain repo connects. FINDING: UI reads project-log.json at repo ROOT but Hub Autopilot trigger reads app/project-log.json — path mismatch for the Project-hub repo; inputs pushed from UI won't be seen by autopilot until aligned.
+- 2026-07-02: Fixed infinite fetch loop in app/src/App.jsx (useMemo storage + stable callback deps); rebuilt and deployed to Railway (deploy 0c932b2f SUCCESS, bundle index-osYdWAc-). Playwright-verified live: 7 requests instead of 68k, file click + Setup work. Setup 404 in user's browser = wrong token saved (github_pat instead of ghp_).

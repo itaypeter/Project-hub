@@ -1,5 +1,19 @@
 # Project Hub — To-Do List
 
+## 📌 Session handoff — 2026-07-02
+
+**Where we are:** App is built and deployed. Railway is **Online & healthy**. **Token blocker resolved:** new `ghp_Oax...` token (scopes: repo, workflow, project) generated and verified against the GitHub API; autopilot trigger `trig_01Hyk3nY4NjgEadfHt43APXM` updated — token swapped in all 4 spots, next run 2026-07-02 18:06 UTC.
+
+**Remaining (do in order):**
+1. You: paste the new token into Hub sidebar (GitHub token → change).
+2. You: revoke old tokens at github.com/settings/tokens (dead `ghp_148...` + check the unused `github_pat_11...`).
+3. Fix brain repo value (currently wrong: `itaypeter/SoulMatch`) → create `itaypeter/brain` (`raw/ wiki/ projects/ archive/`) → re-click ⚙ Setup on each project.
+4. Verify autopilot run after 18:06 UTC actually succeeded.
+
+⚠️ Token still sits in the trigger config in **plaintext** — rotating it means re-running the trigger update.
+
+---
+
 ## Done 2026-06-29 ✅
 
 - [x] Deployed SoulMatch to Vercel → soul-match-seven.vercel.app
