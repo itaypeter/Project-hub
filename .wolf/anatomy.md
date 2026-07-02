@@ -28,6 +28,8 @@ commit
 | `app/src/components/BrainTab.jsx`     | Brain tab: raw note textarea + two-column wiki browser (mirrors CodeExplorer)                                                                                   | 150     |
 | `GUIDE.md`                            | Full tutorial: setup, tabs, functions, schema, keyboard shortcuts                                                                                               | 400     |
 | `TODO.md`                             | Prioritised to-do list: must/should/nice-to-have + known issues                                                                                                 | 200     |
+| `CLAUDE.md`                           | Root agent instructions pushed by ⚙ Setup (scan → plan → implement → test → report), adopted from remote                                                       | 500     |
+| `app/project-log.json`                | Task/question/output log — the Hub↔Claude contract; autopilot writes check-ins here                                                                             | 300     |
 
 ## Wolf files
 
