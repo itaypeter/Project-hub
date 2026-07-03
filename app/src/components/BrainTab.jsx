@@ -19,6 +19,7 @@ export default function BrainTab({
   onShowToast,
 }) {
   const [note, setNote] = useState("");
+  const [category, setCategory] = useState("");
 
   useEffect(() => {
     if (brainRepo) onLoadWiki();
@@ -26,7 +27,8 @@ export default function BrainTab({
 
   const handlePush = async () => {
     if (!note.trim() || pushing) return;
-    const ok = await onPushRaw(note.trim());
+    const tag = category.trim() ? `#${category.trim().toLowerCase().replace(/\s+/g, "-")}\n\n` : "";
+    const ok = await onPushRaw(tag + note.trim());
     if (ok) {
       setNote("");
       onShowToast?.("Note pushed to /raw — run Claude to translate", "success");
@@ -54,6 +56,16 @@ export default function BrainTab({
           {rawCount > 0 && (
             <span className="brain-raw-badge">{rawCount} unprocessed in /raw</span>
           )}
+        </div>
+        <div className="brain-raw-category-row">
+          <span className="brain-raw-category-label">Category</span>
+          <input
+            className="brain-raw-category-input"
+            type="text"
+            placeholder="e.g. suppliers, pricing, standards…"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          />
         </div>
         <textarea
           className="brain-raw-textarea"

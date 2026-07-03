@@ -9,6 +9,7 @@ import {
 } from "./components/TaskPanel.jsx";
 import CodeExplorer from "./components/CodeExplorer.jsx";
 import BrainTab from "./components/BrainTab.jsx";
+import SearchTab from "./components/SearchTab.jsx";
 import StatusBar from "./components/StatusBar.jsx";
 import Toast from "./components/Toast.jsx";
 import { useToast } from "./hooks/useToast.js";
@@ -17,7 +18,7 @@ import { useRepoBrowser } from "./hooks/useRepoBrowser.js";
 import { useBrain } from "./hooks/useBrain.js";
 import { PROJ_COLORS, getProjectOverview } from "./api/github.js";
 
-const TABS = ["input", "questions", "tasks", "output", "code", "brain"];
+const TABS = ["input", "questions", "tasks", "output", "code", "brain", "search"];
 
 export default function App() {
   const [token, setToken] = useState(() => localStorage.getItem("gh_token") || "");
@@ -323,6 +324,24 @@ export default function App() {
                 onSelectFile={brain.selectFile}
                 onPushRaw={brain.pushRaw}
                 onShowToast={showToast}
+              />
+            )}
+
+            {tab === "search" && (
+              <SearchTab
+                token={token}
+                tasks={projectLog.tasks}
+                brainRepo={brainRepo}
+                onGoToTask={(task) => {
+                  setTab(task.type === "output" ? "output" : "tasks");
+                }}
+                onGoToBrain={(result) => {
+                  setTab("brain");
+                  brain.loadWiki().then(() => {
+                    const match = brain.wikiFiles.find((f) => f.path === result.path);
+                    if (match) brain.selectFile(match);
+                  });
+                }}
               />
             )}
           </div>

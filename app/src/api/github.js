@@ -325,6 +325,22 @@ export async function pushRawNote(token, repo, noteContent) {
   });
 }
 
+export async function searchBrainContent(token, repo, query) {
+  if (!query.trim() || !token || !repo) return [];
+  try {
+    const q = encodeURIComponent(`${query} repo:${repo} path:wiki`);
+    const data = await ghFetch(token, `search/code?q=${q}&per_page=20`);
+    return (data.items || []).map((item) => ({
+      name: item.name,
+      path: item.path,
+      url: item.html_url,
+      snippet: item.text_matches?.[0]?.fragment || "",
+    }));
+  } catch {
+    return [];
+  }
+}
+
 export const PROJ_COLORS = [
   "#7C3AED", "#10B981", "#F59E0B", "#EF4444",
   "#3B82F6", "#EC4899", "#14B8A6", "#F97316",
