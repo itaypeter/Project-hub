@@ -25,7 +25,8 @@ commit
 | `app/src/api/github.js`               | GitHub API: getLog, putLog, getTree, getFileContent, explainWithClaude, pushClaudeMd, getBrainWikiList, getBrainRawList, getBrainFile, pushRawNote, PROJ_COLORS | 350     |
 | `app/src/api/webdav.js`               | WebDAV API: getLogWebDAV, putLogWebDAV                                                                                                                          | 80      |
 | `app/src/hooks/useBrain.js`           | Brain state: wiki file list, raw count, file content, pushRaw, loadWiki, selectFile                                                                             | 120     |
-| `app/src/components/BrainTab.jsx`     | Brain tab: raw note textarea + two-column wiki browser (mirrors CodeExplorer)                                                                                   | 150     |
+| `app/src/components/BrainTab.jsx`     | Brain tab: category input + raw note textarea + two-column wiki browser (mirrors CodeExplorer)                                                                  | 160     |
+| `app/src/components/SearchTab.jsx`    | Search tab: unified search across project tasks (in-memory) + brain wiki (GitHub Code Search API); click-to-navigate results                                    | 130     |
 | `GUIDE.md`                            | Full tutorial: setup, tabs, functions, schema, keyboard shortcuts                                                                                               | 400     |
 | `TODO.md`                             | Prioritised to-do list: must/should/nice-to-have + known issues                                                                                                 | 200     |
 | `CLAUDE.md`                           | Root agent instructions pushed by ⚙ Setup (scan → plan → implement → test → report), adopted from remote                                                       | 500     |
