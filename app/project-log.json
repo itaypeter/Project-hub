@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-02T17:00:00.000Z",
+  "lastUpdated": "2026-07-03T00:00:00.000Z",
   "tasks": [
     {
       "id": 1,
@@ -46,26 +46,6 @@
       "commitUrl": "https://github.com/itaypeter/Project-hub/commit/135575d3461ff2bddf767bff03465f7a339fc9ad"
     },
     {
-      "id": 1782691682903,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-06-29T00:08:02.000Z",
-      "completedAt": "2026-06-29T00:08:02.000Z",
-      "note": "ריצת autopilot ב-2026-06-29. כל 5 המשימות הקיימות במצב done. אין idea או todo ממתינים. הרצה הבאה תטפל במשימות חדשות שהמשתמש יוסיף."
-    },
-    {
-      "id": 1782791682904,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-06-29T00:00:00.000Z",
-      "completedAt": "2026-06-29T00:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-06-29 (ריצה שנייה). כל 6 המשימות הקיימות במצב done. אין idea או todo ממתינים. הרצה הבאה תטפל במשימות חדשות שהמשתמש יוסיף."
-    },
-    {
       "id": 1782991682906,
       "title": "שיפור: dark mode — תיקון קונפליקטים ושידרוג light theme",
       "status": "done",
@@ -76,14 +56,14 @@
       "note": "ריצת autopilot ב-2026-06-29. מצאתי קונפליקטים בין גרסאות קודמות של dark mode. פתרתי קונפליקטים ב-App.jsx, Sidebar.jsx, index.css ו-project-log.json.\n\nשיפורים שמוזגו: App.jsx נקי ממצהרות כפולות; Sidebar.jsx עם wrapper div מסודר לכפתור toggle+close; index.css מכיל --accent-hi: #6D28D9 ב-light theme לניגודיות טובה יותר, ו-code-text: #24292E (קרוב לשחור של GitHub). Build עבר בהצלחה."
     },
     {
-      "id": 1782922086716,
+      "id": 1783003000000,
       "title": "בדיקת backlog — אין משימות ממתינות",
       "status": "done",
       "type": "output",
       "source": "claude-code",
-      "createdAt": "2026-07-02T17:00:00.000Z",
-      "completedAt": "2026-07-02T17:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-02. כל המשימות הקיימות במצב done. אין idea או todo ממתינים. הערה: ה-log גדל מאוד עם רשומות 'אין משימות' — ניקה את הרשומות הכפולות כדי לשמור על הקובץ קריא. הרצה הבאה תטפל במשימות חדשות שהמשתמש יוסיף."
+      "createdAt": "2026-07-03T00:00:00.000Z",
+      "completedAt": "2026-07-03T00:00:00.000Z",
+      "note": "ריצת autopilot ב-2026-07-03. כל המשימות הקיימות במצב done. אין idea או todo ממתינים. הרצה הבאה תטפל במשימות חדשות שהמשתמש יוסיף."
     }
   ]
 }
