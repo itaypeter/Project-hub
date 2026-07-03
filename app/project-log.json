@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-03T19:00:00.000Z",
+  "lastUpdated": "2026-07-03T20:00:00.000Z",
   "tasks": [
     {
       "id": 1,
@@ -56,84 +56,14 @@
       "note": "ריצת autopilot ב-2026-06-29. מצאתי קונפליקטים בין גרסאות קודמות של dark mode. פתרתי קונפליקטים ב-App.jsx, Sidebar.jsx, index.css ו-project-log.json.\n\nשיפורים שמוזגו: App.jsx נקי ממצהרות כפולות; Sidebar.jsx עם wrapper div מסודר לכפתור toggle+close; index.css מכיל --accent-hi: #6D28D9 ב-light theme לניגודיות טובה יותר, ו-code-text: #24292E (קרוב לשחור של GitHub). Build עבר בהצלחה."
     },
     {
-      "id": 1783003000000,
+      "id": 1783108800000,
       "title": "בדיקת backlog — אין משימות ממתינות",
       "status": "done",
       "type": "output",
       "source": "claude-code",
-      "createdAt": "2026-07-03T00:00:00.000Z",
-      "completedAt": "2026-07-03T00:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-03. כל המשימות הקיימות במצב done. אין idea או todo ממתינים. הרצה הבאה תטפל במשימות חדשות שהמשתמש יוסיף."
-    },
-    {
-      "id": 1783025000000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-03T06:00:00.000Z",
-      "completedAt": "2026-07-03T06:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-03 (הרצה שנייה). כל המשימות הקיימות במצב done. אין idea או todo ממתינים. הרצה הבאה תטפל במשימות חדשות שהמשתמש יוסיף."
-    },
-    {
-      "id": 1783044483000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-03T08:08:03.000Z",
-      "completedAt": "2026-07-03T08:08:03.000Z",
-      "note": "ריצת autopilot ב-2026-07-03T08:08 UTC. כל המשימות הקיימות במצב done. אין idea או todo ממתינים. הרצה הבאה תטפל במשימות חדשות שהמשתמש יוסיף."
-    },
-    {
-      "id": 1783054800000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-03T10:00:00.000Z",
-      "completedAt": "2026-07-03T10:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-03T10:00 UTC. כל המשימות הקיימות במצב done. אין idea או todo ממתינים. הרצה הבאה תטפל במשימות חדשות שהמשתמש יוסיף."
-    },
-    {
-      "id": 1783058400000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-03T11:00:00.000Z",
-      "completedAt": "2026-07-03T11:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-03T11:00 UTC. כל המשימות הקיימות במצב done. אין idea או todo ממתינים. הרצה הבאה תטפל במשימות חדשות שהמשתמש יוסיף."
-    },
-    {
-      "id": 1783062000000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-03T12:00:00.000Z",
-      "completedAt": "2026-07-03T12:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-03T12:00 UTC. כל המשימות הקיימות במצב done. אין idea או todo ממתינים. הרצה הבאה תטפל במשימות חדשות שהמשתמש יוסיף."
-    },
-    {
-      "id": 1783102116470,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-03T18:08:36.000Z",
-      "completedAt": "2026-07-03T18:08:36.000Z",
-      "note": "ריצת autopilot ב-2026-07-03T18:08:36.000Z. כל המשימות הקיימות במצב done. אין idea או todo ממתינים. הרצה הבאה תטפל במשימות חדשות שהמשתמש יוסיף."
-    },
-    {
-      "id": 1783105200000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-03T19:00:00.000Z",
-      "completedAt": "2026-07-03T19:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-03T19:00 UTC. כל המשימות הקיימות במצב done. אין idea או todo ממתינים. הרצה הבאה תטפל במשימות חדשות שהמשתמש יוסיף."
+      "createdAt": "2026-07-03T20:00:00.000Z",
+      "completedAt": "2026-07-03T20:00:00.000Z",
+      "note": "ריצת autopilot ב-2026-07-03T20:00 UTC. כל המשימות הקיימות במצב done. אין idea או todo ממתינים. הרצה הבאה תטפל במשימות חדשות שהמשתמש יוסיף."
     }
   ]
 }
