@@ -3,10 +3,62 @@
     {
       "id": 1783027962289,
       "title": "The obsidian is the brain of the office. It has an integrated search engine that you can look for either your projects and see what state they are and looking online for answers for questions that you look for them for the fifth time instead look for it once you can mark down the important things you want to save and just save it to your obsidian in the right folder the software does it for you and then you have the information tagged already to the Canton to the state province or whatsoever in this way you have a brain that is always learning and is independent to your office. You can Meike give him your building standards materials that you like to work with other companies that you work with what are their prices you can keep all your bills inside and follow the prices if they rise or go low, you can manage your income your outcome everything in one place",
-      "status": "idea",
+      "status": "done",
       "createdAt": "2026-07-02T21:32:42.289Z",
+      "completedAt": "2026-07-03T00:30:00.000Z",
       "source": "user"
+    },
+    {
+      "id": 1783027962001,
+      "type": "task",
+      "title": "Add searchBrainContent() to github.js using GitHub Code Search API",
+      "status": "done",
+      "source": "claude-code",
+      "createdAt": "2026-07-03T00:00:00.000Z",
+      "completedAt": "2026-07-03T00:30:00.000Z",
+      "note": "Added searchBrainContent() in api/github.js — uses GitHub /search/code API with repo+path:wiki scoping"
+    },
+    {
+      "id": 1783027962002,
+      "type": "task",
+      "title": "Create SearchTab component — unified search across project tasks + brain wiki",
+      "status": "done",
+      "source": "claude-code",
+      "createdAt": "2026-07-03T00:00:00.000Z",
+      "completedAt": "2026-07-03T00:30:00.000Z",
+      "note": "Created app/src/components/SearchTab.jsx — in-memory task filter + brain wiki GitHub code search with click-to-navigate"
+    },
+    {
+      "id": 1783027962003,
+      "type": "task",
+      "title": "Add category field to BrainTab raw note push (tags note with #category prefix)",
+      "status": "done",
+      "source": "claude-code",
+      "createdAt": "2026-07-03T00:00:00.000Z",
+      "completedAt": "2026-07-03T00:30:00.000Z",
+      "note": "BrainTab now shows a Category input above the textarea. Tag is prepended as #category-slug to the raw note content."
+    },
+    {
+      "id": 1783027962004,
+      "type": "task",
+      "title": "Wire search tab into App.jsx + add CSS styles",
+      "status": "done",
+      "source": "claude-code",
+      "createdAt": "2026-07-03T00:00:00.000Z",
+      "completedAt": "2026-07-03T00:30:00.000Z",
+      "note": "Added 'search' to TABS array (key 7), wired SearchTab in content area with navigation callbacks, added all CSS in App.css"
+    },
+    {
+      "id": 1783027962999,
+      "type": "output",
+      "status": "done",
+      "source": "claude-code",
+      "title": "Brain search + category tagging shipped",
+      "note": "✅ What was built:\n\n1. Search tab (press 7 or click Search) — unified search across:\n   - All project log tasks (title + notes, instant in-memory)\n   - Brain wiki files (GitHub Code Search, searches file contents)\n   Clicking a task navigates to Tasks/Output tab. Clicking a wiki result opens it in Brain.\n\n2. Brain tab — Category field above the raw note textarea.\n   Type e.g. 'suppliers' or 'building standards' → saves as #suppliers tag at the top of the raw note so Claude can route it to the right wiki folder.\n\n🔍 What to check in the UI:\n- Tab 'Search' appears in the tabs strip (keyboard: 7)\n- Type a keyword from a task title → see matching task cards appear instantly\n- With brain repo set: type a keyword, click 'Search brain →' → wiki results appear\n- Brain tab → Category field visible above the note textarea\n- Push a note with category 'suppliers' → the raw file in GitHub starts with #suppliers\n\n⚠️ Notes:\n- Brain wiki search requires GitHub token with repo read access (same token already used)\n- GitHub Code Search may return 0 results on private repos without the right scope — ensure token has 'repo' scope\n- Web/online search not included; that would require an external search API key\n\nFiles changed: app/src/components/SearchTab.jsx (new), app/src/components/BrainTab.jsx, app/src/api/github.js, app/src/App.jsx, app/src/App.css",
+      "commitUrl": "https://github.com/itaypeter/Project-hub/commit/77ac5a3",
+      "createdAt": "2026-07-03T00:30:00.000Z",
+      "completedAt": "2026-07-03T00:30:00.000Z"
     }
   ],
-  "lastUpdated": "2026-07-02T21:32:42.289Z"
+  "lastUpdated": "2026-07-03T00:30:00.000Z"
 }
