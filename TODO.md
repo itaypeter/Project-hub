@@ -1,18 +1,32 @@
 # Project Hub — To-Do List
 
-## 📌 Session handoff — 2026-07-02
+## 📌 Session handoff — 2026-07-04
 
-**Where we are:** App is built and deployed. Railway is **Online & healthy**. **Token blocker resolved:** new `ghp_Oax...` token (scopes: repo, workflow, project) generated and verified against the GitHub API; autopilot trigger `trig_01Hyk3nY4NjgEadfHt43APXM` updated — token swapped in all 4 spots, next run 2026-07-02 18:06 UTC.
+**Where we are:** Fully unblocked. Token rotated and verified end-to-end (autopilot ran clean with it), `itaypeter/brain` created and connected, infinite-fetch-loop bug found and fixed (deployed + committed), diverged git history reconciled.
 
-**Remaining (do in order):**
-1. You: paste the new token into Hub sidebar (GitHub token → change).
-2. You: revoke old tokens at github.com/settings/tokens (dead `ghp_148...` + check the unused `github_pat_11...`).
-3. Fix brain repo value (currently wrong: `itaypeter/SoulMatch`) → create `itaypeter/brain` (`raw/ wiki/ projects/ archive/`) → re-click ⚙ Setup on each project.
-4. Verify autopilot run after 18:06 UTC actually succeeded.
+**Remaining (user, in the app):**
+1. Sidebar: remove **Ledgerdary** and re-add as `itaypeter/Ledgerdary` (currently saved with the `itaipeter` typo — the cause of its Setup 404), then click its ⚙ Setup.
+2. Click ⚙ Setup on **ListoPosto** (Project-hub + SoulMatch already pushed).
+3. Close ALL app tabs and reopen — the PWA service worker must swap in the fixed bundle; the 403s are GitHub's secondary rate limit from the old looping code and clear a few minutes after it stops.
+4. Revoke old tokens at github.com/settings/tokens (dead `ghp_148...`; decide on the unused `github_pat_11...`).
+
+**Remaining (dev):**
+- Align project-log paths: the Hub UI reads `project-log.json` at repo **root**, the autopilot reads `app/project-log.json` for the Project-hub repo — inputs pushed from the UI are invisible to the autopilot until aligned (update trigger path or move the file).
+- Decide on branch `autopilot-work` (54 autopilot commits: dark/light mode, token validation + user profile) — merge the good parts or discard.
+- Delete placeholder `raw/README.md` in `itaypeter/brain` (shows as "1 unprocessed" in Brain tab).
 
 ⚠️ Token still sits in the trigger config in **plaintext** — rotating it means re-running the trigger update.
 
 ---
+
+## Done 2026-07-02 ✅
+
+- [x] Rotated GitHub token; swapped into all 4 spots of autopilot trigger `trig_01Hyk3nY4NjgEadfHt43APXM`
+- [x] Created `itaypeter/brain` (private) with `raw/ wiki/ projects/ archive/`; connected in sidebar
+- [x] **Fixed infinite fetch loop** — 68k GitHub requests in 40s, file clicks wiped (unstable hook deps in App.jsx); deployed to Railway, Playwright-verified (7 requests)
+- [x] ⚙ Setup pushed CLAUDE.md (with brain) to Project-hub and SoulMatch
+- [x] Autopilot confirmed running clean with the new token
+- [x] Reconciled diverged remote (54 autopilot commits) — preserved as branch `autopilot-work`, main = deployed line
 
 ## Done 2026-06-29 ✅
 
@@ -46,13 +60,15 @@
 
 ## Must do next 🔴
 
-- [ ] **Refresh the GitHub token** — the token in Project Hub is returning 401 (expired/revoked). Generate a new `ghp_...` with `repo` scope at github.com/settings/tokens, then sidebar → GitHub token → change. Everything GitHub-dependent is blocked until this is done.
+- [ ] **Fix Ledgerdary sidebar entry** — saved as `itaipeter/Ledgerdary` (typo, i instead of y): remove + re-add as `itaypeter/Ledgerdary`, then ⚙ Setup. (Mnemonic: email = ita**i**peter, GitHub = ita**y**peter.)
 
-- [ ] **Fix the Brain repo value** — it's currently set to `itaypeter/SoulMatch` (wrong). Remove it (× in Brain section) and set the real brain repo.
+- [ ] **⚙ Setup on ListoPosto** — Project-hub and SoulMatch are done.
 
-- [ ] **Create the brain repo** — fork [BuildGreatProducts/SimpleBrain](https://github.com/BuildGreatProducts/SimpleBrain) or create `itaypeter/brain` manually with the folder structure (`raw/`, `wiki/`, `projects/`, `archive/`). The Brain tab and autopilot expect this repo to exist. Note: autopilot prompt has `itaypeter/brain` hardcoded — match that name or update the trigger.
+- [ ] **Reload the app cleanly** — close all tabs of the app so the service worker activates the fixed bundle; 403s (secondary rate limit from the old looping code) clear a few minutes after.
 
-- [ ] **Click ⚙ Setup on each project** after the token is refreshed and brain repo is set — re-pushes CLAUDE.md with the brain wiki step included.
+- [ ] **Revoke old GitHub tokens** — dead `ghp_148...`; decide on the unused `github_pat_11...`.
+
+- [ ] **Align project-log.json path for the Project-hub repo** — UI reads repo root, autopilot reads `app/project-log.json`; ideas pushed from the Input tab are invisible to the autopilot until this is fixed.
 
 ---
 
