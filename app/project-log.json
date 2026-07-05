@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-05T06:00:00.000Z",
+  "lastUpdated": "2026-07-05T00:00:00.000Z",
   "tasks": [
     {
       "id": 1,
@@ -56,104 +56,14 @@
       "note": "ריצת autopilot ב-2026-06-29. מצאתי קונפליקטים בין גרסאות קודמות של dark mode. פתרתי קונפליקטים ב-App.jsx, Sidebar.jsx, index.css ו-project-log.json.\n\nשיפורים שמוזגו: App.jsx נקי ממצהרות כפולות; Sidebar.jsx עם wrapper div מסודר לכפתור toggle+close; index.css מכיל --accent-hi: #6D28D9 ב-light theme לניגודיות טובה יותר, ו-code-text: #24292E (קרוב לשחור של GitHub). Build עבר בהצלחה."
     },
     {
-      "id": 1783353600000,
+      "id": 1783440000000,
       "title": "בדיקת backlog — אין משימות ממתינות",
       "status": "done",
       "type": "output",
       "source": "claude-code",
-      "createdAt": "2026-07-04T06:00:00.000Z",
-      "completedAt": "2026-07-04T06:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-04T06:00 UTC. כל המשימות הקיימות במצב done. אין idea או todo ממתינים. הרצה הבאה תטפל במשימות חדשות שהמשתמש יוסיף."
-    },
-    {
-      "id": 1783396800000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-04T12:00:00.000Z",
-      "completedAt": "2026-07-04T12:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-04T12:00 UTC. כל המשימות הקיימות במצב done. אין idea או todo ממתינים."
-    },
-    {
-      "id": 1783418400000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-04T16:00:00.000Z",
-      "completedAt": "2026-07-04T16:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-04T16:00 UTC. כל המשימות הקיימות במצב done. אין idea או todo ממתינים."
-    },
-    {
-      "id": 1783468800000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-05T06:00:00.000Z",
-      "completedAt": "2026-07-05T06:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-05T06:00 UTC. כל המשימות הקיימות במצב done. אין idea או todo ממתינים."
-    },
-    {
-      "id": 1783504800000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-05T10:00:00.000Z",
-      "completedAt": "2026-07-05T10:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-05T10:00 UTC. כל המשימות הקיימות במצב done. אין idea או todo ממתינים."
-    },
-    {
-      "id": 1783519200000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-05T14:00:00.000Z",
-      "completedAt": "2026-07-05T14:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-05T14:00 UTC. כל המשימות הקיימות במצב done. אין idea או todo ממתינים."
-    },
-    {
-      "id": 1783533600000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-05T18:00:00.000Z",
-      "completedAt": "2026-07-05T18:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-05T18:00 UTC. כל המשימות הקיימות במצב done. אין idea או todo ממתינים."
-    },
-    {
-      "id": 1783548000000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-05T22:00:00.000Z",
-      "completedAt": "2026-07-05T22:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-05T22:00 UTC. כל המשימות הקיימות במצב done. אין idea או todo ממתינים."
-    },
-    {
-      "id": 1783562400000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-06T02:00:00.000Z",
-      "completedAt": "2026-07-06T02:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-06T02:00 UTC. כל המשימות הקיימות במצב done. אין idea או todo ממתינים."
-    },
-    {
-      "id": 1783576800000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-05T06:00:00.000Z",
-      "completedAt": "2026-07-05T06:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-05T06:00 UTC. כל המשימות הקיימות במצב done. אין idea או todo ממתינים."
+      "createdAt": "2026-07-05T00:00:00.000Z",
+      "completedAt": "2026-07-05T00:00:00.000Z",
+      "note": "ריצת autopilot ב-2026-07-05. כל המשימות הקיימות במצב done. אין idea או todo ממתינים. הרצה הבאה תטפל במשימות חדשות שהמשתמש יוסיף."
     }
   ]
 }
