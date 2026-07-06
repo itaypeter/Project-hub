@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-06T12:00:00.000Z",
+  "lastUpdated": "2026-07-06T14:00:00.000Z",
   "tasks": [
     {
       "id": 1,
@@ -56,34 +56,14 @@
       "note": "ריצת autopilot ב-2026-06-29. מצאתי קונפליקטים בין גרסאות קודמות של dark mode. פתרתי קונפליקטים ב-App.jsx, Sidebar.jsx, index.css ו-project-log.json.\n\nשיפורים שמוזגו: App.jsx נקי ממצהרות כפולות; Sidebar.jsx עם wrapper div מסודר לכפתור toggle+close; index.css מכיל --accent-hi: #6D28D9 ב-light theme לניגודיות טובה יותר, ו-code-text: #24292E (קרוב לשחור של GitHub). Build עבר בהצלחה."
     },
     {
-      "id": 1783612800000,
+      "id": 1783634400000,
       "title": "בדיקת backlog — אין משימות ממתינות",
       "status": "done",
       "type": "output",
       "source": "claude-code",
-      "createdAt": "2026-07-06T18:00:00.000Z",
-      "completedAt": "2026-07-06T18:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-06T18:00. כל המשימות במצב done. אין idea או todo ממתינים. מחכה לרעיונות חדשים מהמשתמש."
-    },
-    {
-      "id": 1783620490000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-06T10:08:10.000Z",
-      "completedAt": "2026-07-06T10:08:10.000Z",
-      "note": "ריצת autopilot ב-2026-07-06T10:08 UTC. כל המשימות במצב done. אין idea או todo ממתינים. מחכה לרעיונות חדשים מהמשתמש."
-    },
-    {
-      "id": 1783627200000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-06T12:00:00.000Z",
-      "completedAt": "2026-07-06T12:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-06T12:00 UTC. כל המשימות במצב done. אין idea או todo ממתינים. מחכה לרעיונות חדשים מהמשתמש."
+      "createdAt": "2026-07-06T14:00:00.000Z",
+      "completedAt": "2026-07-06T14:00:00.000Z",
+      "note": "ריצת autopilot ב-2026-07-06T14:00 UTC. כל המשימות במצב done. אין idea או todo ממתינים. מחכה לרעיונות חדשים מהמשתמש."
     }
   ]
 }
