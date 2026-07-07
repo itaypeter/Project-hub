@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-07T22:35:00.000Z",
+  "lastUpdated": "2026-07-07T22:45:00.000Z",
   "tasks": [
     {
       "id": 1,
@@ -67,11 +67,23 @@
     },
     {
       "id": 1783840800000,
-      "title": "Add Guide tab to Project Hub — fetch all repo files, generate plain-English codebase guide using Claude API, save as CODEBASE.md in the repo. Tab shows: what the app does, how it's structured, key files and what they do, gotchas. Include a Regenerate button. Load cached CODEBASE.md on subsequent visits instead of re-generating.",
-      "status": "todo",
+      "title": "Add Guide tab to Project Hub",
+      "status": "done",
       "type": "task",
       "source": "user",
-      "createdAt": "2026-07-07T22:30:00.000Z"
+      "createdAt": "2026-07-07T22:30:00.000Z",
+      "completedAt": "2026-07-07T22:45:00.000Z"
+    },
+    {
+      "id": 1783841400000,
+      "type": "output",
+      "status": "done",
+      "source": "claude-code",
+      "title": "Project Hub: added Guide tab — Claude-generated codebase guide cached as CODEBASE.md",
+      "note": "✅ What was implemented\n\nNew 8th tab 'Guide' in Project Hub. On first open: shows a Generate button. Clicking it uses Claude claude-sonnet-5 to read the repo's file tree + up to 14 key files (README, package.json, src/App, api/, hooks/, components/), then generates a plain-English guide with 5 sections: What this app does / How it's structured / Key files / Data flow / Gotchas & notes. The result is saved as CODEBASE.md in the repo. On subsequent visits, CODEBASE.md is loaded instantly from the cache. A Regenerate button lets you refresh it.\n\n🔍 What to check in the UI:\n- Click Guide tab → should show Generate Guide button if no CODEBASE.md\n- Click Generate Guide → animated dots + 'Claude is reading your codebase…', then 5 section cards appear\n- Each section card has an uppercase monospace heading + pre-formatted body\n- Reload the page, click Guide → should load cached guide immediately with 'cached · CODEBASE.md' label\n- Click ↻ Regenerate → re-runs Claude and overwrites CODEBASE.md\n- Without Anthropic key → shows 'Anthropic key required' empty state\n- Without active repo → shows 'No project selected' empty state\n\n⚠️ Edge cases / concerns\n- generateGuide reads up to 14 files; very large repos may hit Claude's prompt limits (content is truncated at 900 chars/file)\n- CODEBASE.md is saved at the root of the selected repo, not inside app/\n\nFiles changed: app/src/components/GuideTab.jsx (new), app/src/hooks/useGuide.js (new), app/src/api/github.js (+getGuideFile, saveGuideFile, generateGuide), app/src/App.jsx (+guide tab wiring), app/src/App.css (+guide styles)",
+      "commitUrl": "https://github.com/itaypeter/Project-hub/commit/638ac74e0c780eb22e24c710e927ef99a87194d7",
+      "createdAt": "2026-07-07T22:45:00.000Z",
+      "completedAt": "2026-07-07T22:45:00.000Z"
     }
   ]
 }
