@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-07T22:30:00.000Z",
+  "lastUpdated": "2026-07-07T22:35:00.000Z",
   "tasks": [
     {
       "id": 1,
@@ -42,7 +42,7 @@
       "createdAt": "2026-06-28T08:00:00.000Z",
       "completedAt": "2026-06-28T08:00:00.000Z",
       "source": "claude-code",
-      "note": "שינוי קבצים: api/github.js, App.jsx, components/Sidebar.jsx, App.css.\n\napi/github.js: הוספתי פונקציה getUser(token) שקוראת ל-GitHub /user API ומחזירה פרופיל המשתמש.\n\nApp.jsx: שיניתי saveToken() ל-async — עכשיו קוראת ל-getUser() לפני שמירת ה-token. אם הבקשה מצליחה: שומרת token + פרופיל (login, avatar_url, name) ב-localStorage תחת gh_user, ומציגה toast 'Connected as @username'. אם נכשלת: מציגה toast עם הודעת שגיאה ולא שומרת כלום. הוספתי disconnectToken() שמנקה גם gh_token וגם gh_user. הוספתי ghUser state שנטען מ-localStorage בהפעלה.\n\nSidebar.jsx: ה-'connected badge' מציג עכשיו avatar קטן (18px) + @username במקום הטקסט הגנרי 'Connected'. כפתור הכניסה שונה ל-'Verify & Save Token'. מקבל disconnectToken במקום setToken ישירות.\n\nApp.css: הוספתי .gh-avatar (18px, עגול, border).\n\nהחלטות: פירשתי 'API endpoint לאימות' בהקשר של React PWA ללא backend — המשמעות הטבעית היא אימות token מול GitHub API ב-client-side. לא שיניתי לוגיקת repo, hooks, WebDAV, קיצורי מקלדת.",
+      "note": "שינוי קבצים: api/github.js, App.jsx, components/Sidebar.jsx, App.css.\n\napi/github.js: הוספתי פונקציה getUser(token) שקוראת ל-GitHub /user API ומחזירה פרופיל המשתמש.\n\nApp.jsx: שיניתי saveToken() ל-async — עכשיו קוראת ל-getUser() לפני שמירת ה-token. אם הבקשה מצליחה: שומרת token + פרופיל (login, avatar_url, name) ב-localStorage תחת gh_user, ומציגה toast 'Connected as @username'. אם נכשלת: מציגה toast עם הודעת שגיאה ולא שומרת כלום. הוספתי disconnectToken() שמנקה גם gh_token וגם gh_user. הוספתי ghUser state שנטען מ-localStorage בהפעלה.\n\nSidebar.jsx: ה-'connected badge' מציג עכשיו avatar קטן (18px) + @username במקום הטקסט הגנרי 'Connected'. כפתור הכניסה שונה ל-'Verify & Save Token'. מקבל disconnectToken במקום setToken ישירות.\n\nApp.css: הוספתי .gh-avatar (18px, עגול, border).\n\nהחלטות: פירשתי 'API endpoint לאימות' בהקשר של React PWA ללא backend — המשמעות הטבעית היא אימות token מול GitHub API ב-client-side. לא שיניתי לוגיקת repo, hooks, WebDAV, שאר הקומפוננטות.",
       "commitUrl": "https://github.com/itaypeter/Project-hub/commit/135575d3461ff2bddf767bff03465f7a339fc9ad"
     },
     {
@@ -68,7 +68,7 @@
     {
       "id": 1783840800000,
       "title": "Add Guide tab to Project Hub — fetch all repo files, generate plain-English codebase guide using Claude API, save as CODEBASE.md in the repo. Tab shows: what the app does, how it's structured, key files and what they do, gotchas. Include a Regenerate button. Load cached CODEBASE.md on subsequent visits instead of re-generating.",
-      "status": "idea",
+      "status": "todo",
       "type": "task",
       "source": "user",
       "createdAt": "2026-07-07T22:30:00.000Z"
