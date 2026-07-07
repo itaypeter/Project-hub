@@ -27,6 +27,48 @@ Find tasks with `"status": "idea"` — these are the user's inputs to act on.
 
 ---
 
+## Step 2.5 — Load app context before acting
+
+Once you've picked a task, identify which app it relates to by scanning the task title for any of these keywords (case-insensitive):
+
+| Keyword(s) | Context file |
+|---|---|
+| archlog | `context/archlog.md` |
+| claude-workspace, claudeworkspace | `context/claude-workspace.md` |
+| coparent | `context/coparent-hub.md` |
+| krish | `context/j-krish.md` |
+| ledgerdary | `context/ledgerdary.md` |
+| life-hub, lifehub | `context/life-hub.md` |
+| listo | `context/listo.md` |
+| matrix | `context/matrix.md` |
+| price-tracker, pricetracker | `context/price-tracker.md` |
+| project-hub, projecthub | `context/project-hub.md` |
+| sharks | `context/sharks.md` |
+| soulmatch | `context/soulmatch.md` |
+| swisswander | `context/swisswander.md` |
+
+Fetch the matching file using the GitHub token available in your session context:
+
+```bash
+# TOKEN is provided in the autopilot system prompt
+curl -s \
+  -H "Authorization: Bearer $GITHUB_TOKEN" \
+  -H "Accept: application/vnd.github+json" \
+  "https://api.github.com/repos/itaypeter/Project-hub/contents/context/<appname>.md" \
+  | python3 -c "
+import sys, json, base64
+d = json.load(sys.stdin)
+if 'content' in d:
+    print(base64.b64decode(d['content'].replace('\\n', '')).decode())
+"
+```
+
+Read the **Ideas** section carefully — these are notes the user captured in Apple Reminders. Treat them as product intent to inform implementation decisions.
+
+**For new apps not in the table:** check if `context/<keyword>.md` exists on GitHub. If it does, load it. New apps are supported automatically — no need to edit this file.
+
+---
+
 ## Step 3 — Plan
 
 For each idea:
