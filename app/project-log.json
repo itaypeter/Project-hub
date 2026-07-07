@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-07T06:00:00.000Z",
+  "lastUpdated": "2026-07-07T06:30:00.000Z",
   "tasks": [
     {
       "id": 1,
@@ -86,44 +86,14 @@
       "completedAt": "2026-07-07T22:45:00.000Z"
     },
     {
-      "id": 1783843200000,
+      "id": 1783848600000,
       "title": "בדיקת backlog — אין משימות ממתינות",
       "status": "done",
       "type": "output",
       "source": "claude-code",
-      "createdAt": "2026-07-07T23:00:00.000Z",
-      "completedAt": "2026-07-07T23:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-07T23:00 UTC. סרקתי app/project-log.json. כל המשימות במצב done. אין idea או todo ממתינים. מחכה לרעיונות חדשים מהמשתמש."
-    },
-    {
-      "id": 1783845000000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-07T23:30:00.000Z",
-      "completedAt": "2026-07-07T23:30:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-07T23:30 UTC. סרקתי app/project-log.json. כל המשימות במצב done. אין idea או todo ממתינים. מחכה לרעיונות חדשים מהמשתמש."
-    },
-    {
-      "id": 1783846800000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-08T00:00:00.000Z",
-      "completedAt": "2026-07-08T00:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-08T00:00 UTC. סרקתי app/project-log.json. כל המשימות במצב done. אין idea או todo ממתינים. מחכה לרעיונות חדשים מהמשתמש."
-    },
-    {
-      "id": 1783861200000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-07T06:00:00.000Z",
-      "completedAt": "2026-07-07T06:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-07T06:00 UTC. סרקתי app/project-log.json. כל המשימות במצב done. אין idea או todo ממתינים. מחכה לרעיונות חדשים מהמשתמש."
+      "createdAt": "2026-07-07T06:30:00.000Z",
+      "completedAt": "2026-07-07T06:30:00.000Z",
+      "note": "ריצת autopilot ב-2026-07-07T06:30 UTC. סרקתי app/project-log.json. כל המשימות במצב done. אין idea או todo ממתינים. מחכה לרעיונות חדשים מהמשתמש."
     }
   ]
 }
