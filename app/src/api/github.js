@@ -341,6 +341,116 @@ export async function searchBrainContent(token, repo, query) {
   }
 }
 
+export async function getGuideFile(token, repo) {
+  try {
+    const data = await ghFetch(token, `repos/${repo}/contents/CODEBASE.md`);
+    const content = atob(data.content.replace(/\n/g, ""));
+    return { content, sha: data.sha };
+  } catch {
+    return { content: null, sha: null };
+  }
+}
+
+export async function saveGuideFile(token, repo, content, sha) {
+  const encoded = btoa(unescape(encodeURIComponent(content)));
+  const res = await ghFetch(token, `repos/${repo}/contents/CODEBASE.md`, {
+    method: "PUT",
+    body: JSON.stringify({
+      message: "docs: update CODEBASE.md guide",
+      content: encoded,
+      ...(sha ? { sha } : {}),
+    }),
+  });
+  return res.content?.sha || null;
+}
+
+export async function generateGuide(token, repo, apiKey) {
+  const tree = await getTree(token, repo);
+  const blobs = tree.filter((f) => f.type === "blob");
+
+  const PRIORITY = [
+    /^README\.md$/i,
+    /^app\/README\.md$/i,
+    /^package\.json$/,
+    /^app\/package\.json$/,
+    /^(app\/)?src\/App\.(jsx?|tsx?)$/,
+    /^(app\/)?src\/main\.(jsx?|tsx?)$/,
+    /^(app\/)?src\/index\.(jsx?|tsx?)$/,
+    /^(app\/)?src\/api\//,
+    /^(app\/)?src\/hooks\//,
+    /^(app\/)?src\/components\//,
+  ];
+
+  const picked = [];
+  for (const re of PRIORITY) {
+    for (const f of blobs) {
+      if (re.test(f.path) && !picked.find((p) => p.path === f.path)) {
+        picked.push(f);
+        if (picked.length >= 14) break;
+      }
+    }
+    if (picked.length >= 14) break;
+  }
+
+  const fileContents = await Promise.all(
+    picked.map(async (f) => {
+      try {
+        const c = await getFileContent(token, repo, f.path);
+        return `### ${f.path}\n\`\`\`\n${c.slice(0, 900)}\n\`\`\``;
+      } catch {
+        return `### ${f.path}\n(unreadable)`;
+      }
+    })
+  );
+
+  const allPaths = blobs.map((f) => f.path).join("\n");
+
+  const prompt = `You are analyzing a GitHub repository. Write a concise, practical plain-English guide for a developer who is new to this codebase.
+
+Use exactly this markdown structure:
+
+## What this app does
+2-3 sentences.
+
+## How it's structured
+Key directories and what they contain. Bullet points.
+
+## Key files
+\`path\` — one sentence per file. 8-12 files.
+
+## Data flow
+How data moves through the app. 3-5 bullets.
+
+## Gotchas & notes
+Surprising constraints, non-obvious patterns, things to watch out for. 3-5 bullets.
+
+---
+
+Full file listing:
+${allPaths.slice(0, 2000)}
+
+Key file contents:
+${fileContents.join("\n\n").slice(0, 7000)}`;
+
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+      "anthropic-dangerous-direct-browser-access": "true",
+    },
+    body: JSON.stringify({
+      model: "claude-sonnet-5",
+      max_tokens: 1500,
+      messages: [{ role: "user", content: prompt }],
+    }),
+  });
+  if (!res.ok) throw new Error(`Claude API error: ${res.status}`);
+  const data = await res.json();
+  return data.content?.[0]?.text || "Could not generate guide.";
+}
+
 export const PROJ_COLORS = [
   "#7C3AED", "#10B981", "#F59E0B", "#EF4444",
   "#3B82F6", "#EC4899", "#14B8A6", "#F97316",

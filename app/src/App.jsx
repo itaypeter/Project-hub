@@ -10,15 +10,17 @@ import {
 import CodeExplorer from "./components/CodeExplorer.jsx";
 import BrainTab from "./components/BrainTab.jsx";
 import SearchTab from "./components/SearchTab.jsx";
+import GuideTab from "./components/GuideTab.jsx";
 import StatusBar from "./components/StatusBar.jsx";
 import Toast from "./components/Toast.jsx";
 import { useToast } from "./hooks/useToast.js";
 import { useProjectLog } from "./hooks/useProjectLog.js";
 import { useRepoBrowser } from "./hooks/useRepoBrowser.js";
 import { useBrain } from "./hooks/useBrain.js";
+import { useGuide } from "./hooks/useGuide.js";
 import { PROJ_COLORS, getProjectOverview } from "./api/github.js";
 
-const TABS = ["input", "questions", "tasks", "output", "code", "brain", "search"];
+const TABS = ["input", "questions", "tasks", "output", "code", "brain", "search", "guide"];
 
 export default function App() {
   const [token, setToken] = useState(() => localStorage.getItem("gh_token") || "");
@@ -63,6 +65,7 @@ export default function App() {
   });
   const repoBrowser = useRepoBrowser({ token, activeRepo, anthropicKey });
   const brain = useBrain({ token, brainRepo });
+  const guide = useGuide({ token, activeRepo, anthropicKey });
 
   const saveToken = () => {
     localStorage.setItem("gh_token", tokenInput);
@@ -92,6 +95,12 @@ export default function App() {
   const { loadLog: fetchLog } = projectLog;
   const { loadTree: fetchTree } = repoBrowser;
   const { loadWiki } = brain;
+  const { loadGuide: fetchGuide } = guide;
+
+  const loadGuide = useCallback(async () => {
+    if (!token || !activeRepo) return;
+    await fetchGuide();
+  }, [token, activeRepo, fetchGuide]);
 
   const loadLog = useCallback(async () => {
     if (!token || !activeRepo) return;
@@ -137,14 +146,12 @@ export default function App() {
   }, [activeRepo, token, anthropicKey]);
 
   useEffect(() => {
-    if (tab === "brain") {
-      loadWiki();
-      return;
-    }
+    if (tab === "brain") { loadWiki(); return; }
+    if (tab === "guide") { loadGuide(); return; }
     if (!activeRepo) return;
     if (tab === "code") loadTree();
     else loadLog();
-  }, [activeRepo, tab, loadLog, loadTree, loadWiki]);
+  }, [activeRepo, tab, loadLog, loadTree, loadWiki, loadGuide]);
 
   useEffect(() => {
     const handleKey = (e) => {
@@ -342,6 +349,19 @@ export default function App() {
                     if (match) brain.selectFile(match);
                   });
                 }}
+              />
+            )}
+
+            {tab === "guide" && (
+              <GuideTab
+                activeRepo={activeRepo}
+                anthropicKey={anthropicKey}
+                guide={guide.guide}
+                loading={guide.loading}
+                generating={guide.generating}
+                error={guide.error}
+                onLoad={loadGuide}
+                onRegenerate={guide.regenerate}
               />
             )}
           </div>
