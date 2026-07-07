@@ -4,6 +4,95 @@ A browser-based control panel for autonomous Claude Code agents. You push ideas;
 
 ---
 
+## Your Workflow (the big picture)
+
+```
+Apple Reminders “Inbox”   ←  drop ideas on the go (format: appname: idea)
+        ↓
+Monday: paste inbox into Claude  ←  use prompts/weekly-inbox-review.md
+        ↓
+Claude routes ideas to context/<app>.md on GitHub
+        ↓  (syncs to Obsidian via Git plugin)
+Autopilot reads context + builds
+        ↓
+Push notification → phone  (requires Claude Code Remote Control)
+        ↓
+Project Hub Output tab  ←  full report, what to test
+```
+
+**Captures that aren’t text** (screenshots, photos, files): dump into an iCloud folder called `Lapricode Inbox`, then share them in the Claude chat during your weekly review.
+
+---
+
+## App Context System
+
+Every app has a context file in `context/<appname>.md`. The autopilot reads this before executing any task so it understands product vision, stack decisions, and your latest ideas.
+
+### Current apps
+
+| App | Context file |
+|---|---|
+| ArchLog | `context/archlog.md` |
+| Claude Workspace | `context/claude-workspace.md` |
+| CoParent Hub | `context/coparent-hub.md` |
+| j.Krish | `context/j-krish.md` |
+| Ledgerdary | `context/ledgerdary.md` |
+| Life Hub | `context/life-hub.md` |
+| Listo | `context/listo.md` |
+| Matrix | `context/matrix.md` |
+| Price Tracker | `context/price-tracker.md` |
+| Project Hub | `context/project-hub.md` |
+| Sharks | `context/sharks.md` |
+| SoulMatch | `context/soulmatch.md` |
+| SwissWander | `context/swisswander.md` |
+
+### Context file format
+
+```markdown
+## What it is
+One paragraph describing the app and who it’s for.
+
+## Stack & Key Decisions
+Tech stack, architecture choices, decisions Claude shouldn’t second-guess.
+
+## Ideas
+- 2026-07-07: idea text (auto-appended from Apple Reminders via weekly review)
+```
+
+Fill in “What it is” and “Stack” for each app — even 2–3 sentences makes a big difference in output quality.
+
+### Adding a new app
+
+Paste `prompts/new-app-onboarding.md` into Claude. It creates the context file, adds the app to the autopilot keyword table, and asks you the setup questions. No manual file editing needed.
+
+---
+
+## Prompts
+
+Ready-made prompts in `prompts/` for recurring tasks:
+
+| File | When to use |
+|---|---|
+| `prompts/weekly-inbox-review.md` | Monday morning — process Apple Reminders + iCloud captures |
+| `prompts/new-app-onboarding.md` | When starting a new app |
+| `prompts/drop-ideas.md` | Quick idea routing outside the weekly session |
+
+---
+
+## Push Notifications
+
+The autopilot sends a push notification to your phone when a build ships. Requires **Claude Code Remote Control** to be enabled:
+
+1. Open the Claude iOS app
+2. Profile → Settings → Claude Code → Enable Remote Control
+3. Allow notifications
+
+You must be logged into the same Anthropic account on both iPhone and Claude Code web. Enable once — works passively from then on.
+
+Notifications only fire when real work ships. Idle autopilot checks are silent.
+
+---
+
 ## Setup
 
 1. Open the live app at `https://project-hub-production-101c.up.railway.app`
@@ -68,7 +157,7 @@ The left panel lists all files in `/wiki/`. Click one to read it. These are Clau
 **Functions:**
 - `getBrainWikiList(token, repo)` — lists `.md` files in `/wiki`
 - `getBrainRawList(token, repo)` — counts unprocessed files in `/raw`
-- `getBrainFile(token, repo, path)` — fetches a wiki file's content
+- `getBrainFile(token, repo, path)` — fetches a wiki file’s content
 - `pushRawNote(token, repo, content)` — creates `/raw/[ISO-timestamp].md` with the note
 
 ---
@@ -79,15 +168,17 @@ Pushes a `CLAUDE.md` to any project repo. This file instructs Claude Code to wor
 
 1. Scan the full codebase (`find`, `cat package.json`, `cat README.md`)
 2. Read `project-log.json` for `idea` tasks
-3. Plan — break idea into 3–6 atomic subtasks
-4. Implement — commit after each change, update task statuses
-5. Test with Playwright (install if needed, screenshot key UI states)
-6. Report back with a structured output task (✅ done / 🔍 what to check / ⚠️ concerns)
+3. Load app context from `context/<app>.md` (Step 2.5)
+4. Plan — break idea into 3–6 atomic subtasks
+5. Implement — commit after each change, update task statuses
+6. Test with Playwright (install if needed, screenshot key UI states)
+7. Report back with a structured output task (✅ done / 🔍 what to check / ⚠️ concerns)
+8. Send push notification to phone
 
-If a **Brain repo is connected** in the sidebar, `CLAUDE.md` also includes a Step 0 that reads the brain wiki before any implementation — so Claude knows your terminology, customer types, pricing rules, etc.
+If a **Brain repo is connected** in the sidebar, `CLAUDE.md` also includes a Step 0 that reads the brain wiki before any implementation.
 
 **Function:**
-- `pushClaudeMd(token, repo, brainRepo?)` — creates or updates `CLAUDE.md` via GitHub Contents API. Fetches existing SHA first so it can overwrite without a conflict.
+- `pushClaudeMd(token, repo, brainRepo?)` — creates or updates `CLAUDE.md` via GitHub Contents API.
 
 ---
 
@@ -97,12 +188,14 @@ A cloud routine that runs **every 2 hours** on `claude.ai/code` without you touc
 
 **What it does on each run:**
 1. Reads the brain wiki (`itaypeter/brain`) for business context
-2. Fetches `app/project-log.json` from the Project Hub repo
+2. Fetches `app/project-log.json`
 3. Picks the highest-priority pending task (`idea` → `todo`)
-4. Marks it in progress, does the work, builds, commits, pushes
-5. Marks the task done and writes an output report
+4. Loads the matching `context/<app>.md` for product context
+5. Marks it in progress, builds, commits, pushes
+6. Marks the task done, writes an output report
+7. Sends a push notification to your phone
 
-**Trigger ID:** `trig_01Hyk3nY4NjgEadfHt43APXM`  
+**Trigger ID:** `trig_01Hyk3nY4NjgEadfHt43APXM`\
 **Schedule:** `0 */2 * * *` (every 2 hours, all day)
 
 ---
@@ -136,11 +229,11 @@ A cloud routine that runs **every 2 hours** on `claude.ai/code` without you touc
 }
 ```
 
-| status    | meaning                                   |
-|-----------|-------------------------------------------|
-| `idea`    | User input — Claude picks it up and acts  |
-| `todo`    | In progress                               |
-| `done`    | Completed                                 |
+| status | meaning |
+|---|---|
+| `idea` | User input — Claude picks it up and acts |
+| `todo` | In progress |
+| `done` | Completed |
 | `blocked` | Needs user decision before Claude can continue |
 
 ---
@@ -148,7 +241,7 @@ A cloud routine that runs **every 2 hours** on `claude.ai/code` without you touc
 ## Keyboard Shortcuts
 
 | Key | Action |
-|-----|--------|
+|---|---|
 | `1–6` | Switch tabs (Input / Questions / Tasks / Output / Code / Brain) |
 | `r` | Refresh current tab |
 | `n` | Focus the idea textarea (Input tab) |
