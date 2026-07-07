@@ -50,7 +50,6 @@ Once you've picked a task, identify which app it relates to by scanning the task
 Fetch the matching file using the GitHub token available in your session context:
 
 ```bash
-# TOKEN is provided in the autopilot system prompt
 curl -s \
   -H "Authorization: Bearer $GITHUB_TOKEN" \
   -H "Accept: application/vnd.github+json" \
@@ -63,7 +62,7 @@ if 'content' in d:
 "
 ```
 
-Read the **Ideas** section carefully — these are notes the user captured in Apple Reminders. Treat them as product intent to inform implementation decisions.
+Read the **Ideas** section carefully — these are notes the user captured from Apple Reminders. Treat them as product intent to inform implementation decisions.
 
 **For new apps not in the table:** check if `context/<keyword>.md` exists on GitHub. If it does, load it. New apps are supported automatically — no need to edit this file.
 
@@ -125,6 +124,19 @@ Add one output task to project-log.json:
 ```
 
 Push project-log.json — the user sees the report in Project Hub's Output tab.
+
+---
+
+## Step 7 — Notify the user
+
+After pushing, send a push notification using the `PushNotification` tool so it lands on the user's phone:
+
+```
+message: "✅ <App>: <one-line summary>. Check Project Hub Output tab."
+status: "proactive"
+```
+
+Only send if real work was done (a build shipped, a bug was fixed, ideas were processed). Do NOT notify for idle checks where nothing changed.
 
 ---
 
