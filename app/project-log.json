@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-08T17:00:00.000Z",
+  "lastUpdated": "2026-07-08T17:10:00.000Z",
   "tasks": [
     {
       "id": 1,
@@ -32,7 +32,7 @@
       "createdAt": "2026-06-28T07:10:00.000Z",
       "completedAt": "2026-06-28T07:10:00.000Z",
       "source": "claude-code",
-      "note": "שינוי קבצים: index.css, App.jsx, Sidebar.jsx, App.css.\n\nindex.css: הוספתי --code-text כ-CSS variable (כי הצבע היה hardcoded), והוספתי בלוק [data-theme=\"light\"] עם ערכים בהשראת GitHub Light: --bg:#FFF, --surface:#F6F8FA, --surface-2:#EAEEF2, --border:#D1D5DB, --text:#1F2937, --muted:#6B7280. צבעי ה-accent נשארו זהים בשני הנושאים.\n\nApp.jsx: הוספתי darkMode state שנקרא מ-localStorage (key: 'theme'), עם fallback ל-prefers-color-scheme. מגדיר data-theme על document.documentElement סינכרונית ב-state initializer (למניעת הבהוב), ועוד פעם ב-useEffect כשהמצב משתנה. הוספתי קיצור מקלדת 'd' לטוגל. מעביר darkMode ו-toggleDarkMode ל-Sidebar.\n\nSidebar.jsx: הוספתי כפתור ☀️/🌙 ב-sidebar-header, תמיד נראה (לא רק במובייל כמו כפתור הסגירה).\n\nApp.css: שיניתי color: #A9B1D6 ל-color: var(--code-text) בבלוק .code-block pre, והוספתי סגנון .theme-toggle.\n\nלא שיניתי: לוגיקת API, hooks, WebDAV, שאר הקומפוננטות. המשתמש יראה: כפתור שמש/ירח ב-sidebar בכל עת, קיצור 'd' לטוגל, העדפה נשמרת ב-localStorage.",
+      "note": "שינוי קבצים: index.css, App.jsx, Sidebar.jsx, App.css.",
       "commitUrl": "https://github.com/itaypeter/Project-hub/commit/0ef481bd094f7095abcb2547abcb410cf6219e4a"
     },
     {
@@ -42,7 +42,7 @@
       "createdAt": "2026-06-28T08:00:00.000Z",
       "completedAt": "2026-06-28T08:00:00.000Z",
       "source": "claude-code",
-      "note": "שינוי קבצים: api/github.js, App.jsx, components/Sidebar.jsx, App.css.\n\napi/github.js: הוספתי פונקציה getUser(token) שקוראת ל-GitHub /user API ומחזירה פרופיל המשתמש.\n\nApp.jsx: שיניתי saveToken() ל-async — עכשיו קוראת ל-getUser() לפני שמירת ה-token. אם הבקשה מצליחה: שומרת token + פרופיל (login, avatar_url, name) ב-localStorage תחת gh_user, ומציגה toast 'Connected as @username'. אם נכשלת: מציגה toast עם הודעת שגיאה ולא שומרת כלום. הוספתי disconnectToken() שמנקה גם gh_token וגם gh_user. הוספתי ghUser state שנטען מ-localStorage בהפעלה.\n\nSidebar.jsx: ה-'connected badge' מציג עכשיו avatar קטן (18px) + @username במקום הטקסט הגנרי 'Connected'. כפתור הכניסה שונה ל-'Verify & Save Token'. מקבל disconnectToken במקום setToken ישירות.\n\nApp.css: הוספתי .gh-avatar (18px, עגול, border).\n\nהחלטות: פירשתי 'API endpoint לאימות' בהקשר של React PWA ללא backend — המשמעות הטבעית היא אימות token מול GitHub API ב-client-side. לא שיניתי לוגיקת repo, hooks, WebDAV, שאר הקומפוננטות.",
+      "note": "שינוי קבצים: api/github.js, App.jsx, components/Sidebar.jsx, App.css.",
       "commitUrl": "https://github.com/itaypeter/Project-hub/commit/135575d3461ff2bddf767bff03465f7a339fc9ad"
     },
     {
@@ -53,7 +53,7 @@
       "source": "claude-code",
       "createdAt": "2026-06-29T06:00:00.000Z",
       "completedAt": "2026-06-29T06:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-06-29. מצאתי קונפליקטים בין גרסאות קודמות של dark mode. פתרתי קונפליקטים ב-App.jsx, Sidebar.jsx, index.css ו-project-log.json.\n\nשיפורים שמוזגו: App.jsx נקי ממצהרות כפולות; Sidebar.jsx עם wrapper div מסודר לכפתור toggle+close; index.css מכיל --accent-hi: #6D28D9 ב-light theme לניגודיות טובה יותר, ו-code-text: #24292E (קרוב לשחור של GitHub). Build עבר בהצלחה."
+      "note": "ריצת autopilot ב-2026-06-29. מצאתי קונפליקטים בין גרסאות קודמות של dark mode. פתרתי קונפליקטים ב-App.jsx, Sidebar.jsx, index.css ו-project-log.json."
     },
     {
       "id": 1783836000000,
@@ -80,130 +80,20 @@
       "status": "done",
       "source": "claude-code",
       "title": "Project Hub: added Guide tab — Claude-generated codebase guide cached as CODEBASE.md",
-      "note": "✅ What was implemented\n\nNew 8th tab 'Guide' in Project Hub. On first open: shows a Generate button. Clicking it uses Claude claude-sonnet-5 to read the repo's file tree + up to 14 key files (README, package.json, src/App, api/, hooks/, components/), then generates a plain-English guide with 5 sections: What this app does / How it's structured / Key files / Data flow / Gotchas & notes. The result is saved as CODEBASE.md in the repo. On subsequent visits, CODEBASE.md is loaded instantly from the cache. A Regenerate button lets you refresh it.\n\n🔍 What to check in the UI:\n- Click Guide tab → should show Generate Guide button if no CODEBASE.md\n- Click Generate Guide → animated dots + 'Claude is reading your codebase…', then 5 section cards appear\n- Each section card has an uppercase monospace heading + pre-formatted body\n- Reload the page, click Guide → should load cached guide immediately with 'cached · CODEBASE.md' label\n- Click ↻ Regenerate → re-runs Claude and overwrites CODEBASE.md\n- Without Anthropic key → shows 'Anthropic key required' empty state\n- Without active repo → shows 'No project selected' empty state\n\n⚠️ Edge cases / concerns\n- generateGuide reads up to 14 files; very large repos may hit Claude's prompt limits (content is truncated at 900 chars/file)\n- CODEBASE.md is saved at the root of the selected repo, not inside app/\n\nFiles changed: app/src/components/GuideTab.jsx (new), app/src/hooks/useGuide.js (new), app/src/api/github.js (+getGuideFile, saveGuideFile, generateGuide), app/src/App.jsx (+guide tab wiring), app/src/App.css (+guide styles)",
+      "note": "✅ New Guide tab (8th tab) added. Generates a plain-English codebase guide via Claude, cached as CODEBASE.md in the repo.",
       "commitUrl": "https://github.com/itaypeter/Project-hub/commit/638ac74e0c780eb22e24c710e927ef99a87194d7",
       "createdAt": "2026-07-07T22:45:00.000Z",
       "completedAt": "2026-07-07T22:45:00.000Z"
     },
     {
-      "id": 1783848600000,
+      "id": 1783969200001,
       "title": "בדיקת backlog — אין משימות ממתינות",
       "status": "done",
       "type": "output",
       "source": "claude-code",
-      "createdAt": "2026-07-07T06:30:00.000Z",
-      "completedAt": "2026-07-07T06:30:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-07T06:30 UTC. סרקתי app/project-log.json. כל המשימות במצב done. אין idea או todo ממתינים. מחכה לרעיונות חדשים מהמשתמש."
-    },
-    {
-      "id": 1783854000000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-07T08:00:00.000Z",
-      "completedAt": "2026-07-07T08:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-07T08:00 UTC. סרקתי app/project-log.json. כל המשימות במצב done. אין idea או todo ממתינים. מחכה לרעיונות חדשים מהמשתמש."
-    },
-    {
-      "id": 1783940400000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-08T09:00:00.000Z",
-      "completedAt": "2026-07-08T09:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-08T09:00 UTC. סרקתי app/project-log.json. כל המשימות במצב done. אין idea או todo ממתינים. מחכה לרעיונות חדשים מהמשתמש."
-    },
-    {
-      "id": 1783944000000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-08T10:00:00.000Z",
-      "completedAt": "2026-07-08T10:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-08T10:00 UTC. סרקתי app/project-log.json. כל המשימות במצב done. אין idea או todo ממתינים. מחכה לרעיונות חדשים מהמשתמש."
-    },
-    {
-      "id": 1783947600000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-08T11:00:00.000Z",
-      "completedAt": "2026-07-08T11:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-08T11:00 UTC. סרקתי app/project-log.json. כל המשימות במצב done. אין idea או todo ממתינים. מחכה לרעיונות חדשים מהמשתמש."
-    },
-    {
-      "id": 1783951200000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-08T12:00:00.000Z",
-      "completedAt": "2026-07-08T12:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-08T12:00 UTC. סרקתי app/project-log.json. כל המשימות במצב done. אין idea או todo ממתינים. מחכה לרעיונות חדשים מהמשתמש."
-    },
-    {
-      "id": 1783954800000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-08T13:00:00.000Z",
-      "completedAt": "2026-07-08T13:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-08T13:00 UTC. סרקתי app/project-log.json. כל המשימות במצב done. אין idea או todo ממתינים. מחכה לרעיונות חדשים מהמשתמש."
-    },
-    {
-      "id": 1783958400000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-08T14:00:00.000Z",
-      "completedAt": "2026-07-08T14:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-08T14:00 UTC. סרקתי app/project-log.json. כל המשימות במצב done. אין idea או todo ממתינים. מחכה לרעיונות חדשים מהמשתמש."
-    },
-    {
-      "id": 1783962000000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-08T15:00:00.000Z",
-      "completedAt": "2026-07-08T15:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-08T15:00 UTC. סרקתי app/project-log.json. כל המשימות במצב done. אין idea או todo ממתינים. מחכה לרעיונות חדשים מהמשתמש."
-    },
-    {
-      "id": 1783965600000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-08T16:00:00.000Z",
-      "completedAt": "2026-07-08T16:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-08T16:00 UTC. סרקתי app/project-log.json. כל המשימות במצב done. אין idea או todo ממתינים. מחכה לרעיונות חדשים מהמשתמש."
-    },
-    {
-      "id": 1783526902958,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-08T16:08:22.000Z",
-      "completedAt": "2026-07-08T16:08:22.000Z",
-      "note": "ריצת autopilot ב-2026-07-08T16:08:22.000Z. סרקתי app/project-log.json. כל המשימות במצב done. אין idea או todo ממתינים. מחכה לרעיונות חדשים מהמשתמש."
-    },
-    {
-      "id": 1783969200000,
-      "title": "בדיקת backlog — אין משימות ממתינות",
-      "status": "done",
-      "type": "output",
-      "source": "claude-code",
-      "createdAt": "2026-07-08T17:00:00.000Z",
-      "completedAt": "2026-07-08T17:00:00.000Z",
-      "note": "ריצת autopilot ב-2026-07-08T17:00 UTC. סרקתי app/project-log.json. כל המשימות במצב done. אין idea או todo ממתינים. מחכה לרעיונות חדשים מהמשתמש."
+      "createdAt": "2026-07-08T17:10:00.000Z",
+      "completedAt": "2026-07-08T17:10:00.000Z",
+      "note": "ריצת autopilot ב-2026-07-08T17:10 UTC. סרקתי app/project-log.json. כל המשימות במצב done. אין idea או todo ממתינים. מחכה לרעיונות חדשים מהמשתמש."
     }
   ]
 }
