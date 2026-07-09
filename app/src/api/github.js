@@ -103,17 +103,21 @@ export async function explainWithClaude(path, content, apiKey) {
       "anthropic-dangerous-direct-browser-access": "true",
     },
     body: JSON.stringify({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 500,
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 300,
       messages: [
         {
           role: "user",
-          content: `Explain what this file does in a project in 2-3 sentences:\n\nFile: ${path}\n\n${content.slice(0, 2000)}`,
+          content: `You're explaining a code file to someone who is not a programmer — no jargon, no walkthrough of syntax. In 2-3 short plain-English sentences, say what this file is for and why it matters to the app. If you must use a technical term, explain it briefly in parentheses.\n\nFile: ${path}\n\n${content.slice(0, 2000)}`,
         },
       ],
     }),
   });
-  if (!res.ok) return `API error: ${res.status}`;
+  if (!res.ok) {
+    const errBody = await res.json().catch(() => null);
+    const detail = errBody?.error?.message || res.statusText;
+    return `API error: ${res.status} — ${detail}`;
+  }
   const data = await res.json();
   return data.content?.[0]?.text || "Could not get explanation.";
 }
