@@ -112,5 +112,18 @@
       "404",
       "setup"
     ]
+  },
+  {
+    "date": "2026-07-30",
+    "error_message": "Scheduled Hub Autopilot runs (2026-07-09 through 2026-07-29) produced 'backlog check — no pending tasks' commits that never appeared in the Project Hub Output tab",
+    "root_cause": "The scheduled trigger's stored prompt tells autopilot to read/write app/project-log.json, but LOG_FILE in api/github.js has pointed to repo-root project-log.json since the initial commit — the app has never read app/project-log.json. That path is a stale sample/template file (already flagged in cerebrum.md Key Learnings). ~3 weeks of idle-check commits landed on the wrong file, invisible to the user.",
+    "fix": "This run correctly read/wrote root project-log.json and logged a note there. The trigger's stored prompt still needs manual correction (repo-root path instead of app/project-log.json) by the user — not editable from inside a session.",
+    "tags": [
+      "autopilot",
+      "project-log",
+      "file-path",
+      "trigger-config",
+      "silent-failure"
+    ]
   }
 ]

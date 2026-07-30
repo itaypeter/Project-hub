@@ -59,6 +59,17 @@
       "createdAt": "2026-07-03T00:30:00.000Z",
       "completedAt": "2026-07-03T00:30:00.000Z"
     }
+    ,
+    {
+      "id": 1785392129000,
+      "type": "note",
+      "status": "done",
+      "source": "claude-code",
+      "title": "Backlog check — no pending tasks (found & fixed a file-path bug in autopilot)",
+      "note": "✅ No idea/todo tasks pending in this file (the one the app actually reads — LOG_FILE in api/github.js resolves to repo-root project-log.json).\n\n⚠️ Found: every scheduled autopilot run since ~2026-07-09 was reading/writing app/project-log.json instead of this file. That path has never been read by the running app (confirmed in git blame — LOG_FILE has pointed to repo root since the initial commit), so ~3 weeks of 'backlog check' commits never showed up in the Project Hub Output tab. app/project-log.json is a stale sample/template file (already noted as such in .wolf/cerebrum.md).\n\nThis run correctly reads/writes the root project-log.json going forward. If your scheduled routine's stored prompt still says 'Read app/project-log.json', consider updating it to 'project-log.json' (repo root) so this doesn't recur — I can't edit the trigger config myself from here.\n\nLogged to .wolf/buglog.json for future reference.",
+      "createdAt": "2026-07-30T06:15:29.000Z",
+      "completedAt": "2026-07-30T06:15:29.000Z"
+    }
   ],
-  "lastUpdated": "2026-07-03T00:30:00.000Z"
+  "lastUpdated": "2026-07-30T06:15:29.000Z"
 }
