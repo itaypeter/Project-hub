@@ -58,8 +58,7 @@
       "commitUrl": "https://github.com/itaypeter/Project-hub/commit/77ac5a3",
       "createdAt": "2026-07-03T00:30:00.000Z",
       "completedAt": "2026-07-03T00:30:00.000Z"
-    }
-    ,
+    },
     {
       "id": 1785392129000,
       "type": "note",
@@ -79,7 +78,17 @@
       "note": "✅ No idea/todo tasks pending. This run again correctly read/wrote the root project-log.json (the file this app actually loads).\n\n⚠️ Still open: the scheduled trigger's stored prompt (the text that kicks off each Hub Autopilot run) still tells the agent to use app/project-log.json — a stale template file the running app never reads. This was first caught and logged on 2026-07-30 (see previous entry + .wolf/buglog.json) and has not been corrected yet. Each run currently self-corrects to the right file, so no data is being lost, but the trigger prompt should be edited to say 'project-log.json' (repo root) to remove the risk of a future run missing the correction. This requires editing the trigger config, which isn't something I can do from inside a session.",
       "createdAt": "2026-07-31T06:10:00.000Z",
       "completedAt": "2026-07-31T06:10:00.000Z"
+    },
+    {
+      "id": 1785913800000,
+      "type": "note",
+      "status": "done",
+      "source": "claude-code",
+      "title": "Backlog check — no pending tasks (trigger prompt correction still open)",
+      "note": "✅ No idea/todo tasks pending in project-log.json (repo root — the file LOG_FILE in api/github.js actually reads) or in app/project-log.json (stale template, confirmed unused by the running app).\n\n⚠️ Still open, unchanged since 2026-07-30: the scheduled Hub Autopilot trigger's stored prompt still tells the agent to read/write app/project-log.json instead of the repo-root file. This session only has session-scoped cron tools (CronCreate/CronList/CronDelete), which are separate from the actual external trigger (trig_01Hyk3nY4NjgEadfHt43APXM) and cannot edit its stored prompt — confirmed no tool in this environment can modify that trigger config. Each run continues to self-correct to the right file, so no task data is being lost, but the trigger prompt itself needs a one-time manual edit (root project-log.json, not app/project-log.json) by the user.",
+      "createdAt": "2026-08-02T06:15:00.000Z",
+      "completedAt": "2026-08-02T06:15:00.000Z"
     }
   ],
-  "lastUpdated": "2026-07-31T06:10:00.000Z"
+  "lastUpdated": "2026-08-02T06:15:00.000Z"
 }
