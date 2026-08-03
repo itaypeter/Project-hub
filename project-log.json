@@ -88,7 +88,17 @@
       "note": "✅ No idea/todo tasks pending in project-log.json (repo root — the file LOG_FILE in api/github.js actually reads) or in app/project-log.json (stale template, confirmed unused by the running app).\n\n⚠️ Still open, unchanged since 2026-07-30: the scheduled Hub Autopilot trigger's stored prompt still tells the agent to read/write app/project-log.json instead of the repo-root file. This session only has session-scoped cron tools (CronCreate/CronList/CronDelete), which are separate from the actual external trigger (trig_01Hyk3nY4NjgEadfHt43APXM) and cannot edit its stored prompt — confirmed no tool in this environment can modify that trigger config. Each run continues to self-correct to the right file, so no task data is being lost, but the trigger prompt itself needs a one-time manual edit (root project-log.json, not app/project-log.json) by the user.",
       "createdAt": "2026-08-02T06:15:00.000Z",
       "completedAt": "2026-08-02T06:15:00.000Z"
+    },
+    {
+      "id": 1786000000000,
+      "type": "note",
+      "status": "done",
+      "source": "claude-code",
+      "title": "Backlog check — no pending tasks (2026-08-03; trigger prompt fix still not applied)",
+      "note": "✅ No idea/todo tasks pending in project-log.json (repo root — confirmed via api/github.js LOG_FILE, still \"project-log.json\") or app/project-log.json (stale template, unused by the running app).\n\n⚠️ Unchanged since 2026-07-30, now the 4th consecutive check: the scheduled Hub Autopilot trigger's stored prompt still instructs the agent to read/write app/project-log.json instead of the repo-root file. No session-scoped tool available here can edit that external trigger's stored prompt. Each run keeps self-correcting to the right file, so no task data is lost, but the trigger prompt itself needs a one-time manual edit by the user (change app/project-log.json → project-log.json). No further action taken this run since the backlog is empty.",
+      "createdAt": "2026-08-03T06:00:00.000Z",
+      "completedAt": "2026-08-03T06:00:00.000Z"
     }
   ],
-  "lastUpdated": "2026-08-02T06:15:00.000Z"
+  "lastUpdated": "2026-08-03T06:00:00.000Z"
 }
