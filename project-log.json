@@ -98,7 +98,17 @@
       "note": "✅ No idea/todo tasks pending in project-log.json (repo root — confirmed via api/github.js LOG_FILE, still \"project-log.json\") or app/project-log.json (stale template, unused by the running app).\n\n⚠️ Unchanged since 2026-07-30, now the 4th consecutive check: the scheduled Hub Autopilot trigger's stored prompt still instructs the agent to read/write app/project-log.json instead of the repo-root file. No session-scoped tool available here can edit that external trigger's stored prompt. Each run keeps self-correcting to the right file, so no task data is lost, but the trigger prompt itself needs a one-time manual edit by the user (change app/project-log.json → project-log.json). No further action taken this run since the backlog is empty.",
       "createdAt": "2026-08-03T06:00:00.000Z",
       "completedAt": "2026-08-03T06:00:00.000Z"
+    },
+    {
+      "id": 1786172400000,
+      "type": "note",
+      "status": "done",
+      "source": "claude-code",
+      "title": "Backlog check — no pending tasks (2026-08-04; trigger prompt fix still not applied, 6th day)",
+      "note": "✅ No idea/todo tasks pending in project-log.json (repo root — confirmed via api/github.js LOG_FILE, still \"project-log.json\") or app/project-log.json (stale template, unused by the running app). Checked brain repo wiki/ — still only the placeholder README, nothing to act on.\n\n⚠️ Unchanged since 2026-07-30, now the 6th consecutive check: the scheduled Hub Autopilot trigger's stored prompt still instructs the agent to read/write app/project-log.json instead of the repo-root file. No session-scoped tool available here can edit that external trigger's stored prompt. Each run keeps self-correcting to the right file, so no task data is lost, but the trigger prompt itself needs a one-time manual edit by the user (change app/project-log.json → project-log.json). No further action taken this run since the backlog is empty.",
+      "createdAt": "2026-08-04T06:00:00.000Z",
+      "completedAt": "2026-08-04T06:00:00.000Z"
     }
   ],
-  "lastUpdated": "2026-08-03T06:00:00.000Z"
+  "lastUpdated": "2026-08-04T06:00:00.000Z"
 }
